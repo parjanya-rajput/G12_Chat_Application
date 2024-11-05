@@ -27,9 +27,9 @@ const SIGNIN_TITLE_COLOR = '#000E08';
 const SIGNIN_OR_COLOR = "#797C7B";
 const SIGNIN_RULER_COLOR = "#CDD1D0";
 const SIGNIN_TEXT_COLOR = "#24786D";
-const SIGNIN_BUTTON_COLOR = '#F3F6F6  ';
+const SIGNIN_BUTTON_COLOR = '#F3F6F6';
 const SIGNIN_BUTTON_TEXT_COLOR = '#797C7B';
-const SIGNIN1_BUTTON_COLOR = '#B9C1BE';
+const SIGNIN1_BUTTON_COLOR = '#24786D';
 const SIGNIN1_BUTTON_TEXT_COLOR = '#FFFFFF';
 
 // Input Fields
@@ -49,9 +49,9 @@ const TEXT_FONT_COLOR = "#B9C1BE";
 const ERROR_COLOR = "#FF2D1B";
 const ERROR_FONT_SIZE = 0.02 * height;
 const BUTTON_HEIGHT = 0.06 * height;
-const BUTTON_WIDTH = 0.4 * width;
-const BUTTON_BORDER_RADIUS = 0.012 * height;
-const BUTTON_FONT_SIZE = 0.023 * height;
+const BUTTON_WIDTH = 0.85 * width;
+const BUTTON_BORDER_RADIUS = 0.018 * height;
+const BUTTON_FONT_SIZE = 0.02 * height;
 
 const GlobalStyles = {
     SPLASH_BACKGROUND_COLOR,

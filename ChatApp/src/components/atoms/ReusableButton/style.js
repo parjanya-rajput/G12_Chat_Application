@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,Dimensions } from 'react-native';
 import GlobalStyles from '../../globalStyles'; 
+
+const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
@@ -10,13 +12,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: GlobalStyles.SIGNIN1_BUTTON_COLOR,
     alignSelf: 'center',
-    position: 'absolute', 
-    top: 724,
+    position: 'fixed', 
+    // top: 0.06*height,
     borderColor: '#000000',
     borderWidth: 1,
 
   },
   buttonText: {
+    fontFamily:'Caros-Light',
     fontSize: GlobalStyles.BUTTON_FONT_SIZE,
     fontWeight: 'bold',
     color: GlobalStyles.SIGNIN1_BUTTON_TEXT_COLOR,

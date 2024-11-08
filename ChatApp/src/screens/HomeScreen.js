@@ -33,7 +33,8 @@ const HomeScreen = ({ navigation }) => {
                     textColor="#FFFFFF"
                     onPress={() => navigation.navigate('ChatList')}
                 />
-            </View>                     <Button title="Go to OnBoardingScreen" onPress={() => navigation.navigate('OnBoardingScreen')} />
+            </View>                     
+            <Button title="Go to OnBoardingScreen" onPress={() => navigation.navigate('OnBoardingScreen')} />
         </View>
     );
 };

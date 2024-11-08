@@ -2,39 +2,51 @@ import React from 'react';
 import { View, Text, Button } from 'react-native';
 import ReusableButton from '../components/atoms/ReusableButton';
 
+import { logout } from '../firebase/authService';
+
 
 const HomeScreen = ({ navigation }) => {
+
+    const handleLogOut = () => {
+        logout()
+            .then(() => {
+                navigation.replace('OnBoardingScreen');
+            })
+            .catch((error) => alert(error.message.toString()));
+    }
+
     return (
         <View>
-
-            <View>
-                <Text>Home Screen</Text>
-            </View>
-            <View style={{ paddingTop: 10}}>
-                <ReusableButton
-                    text="Open Drawer"
-                    backgroundColor="#4CAF50"
-                    textColor="#FFFFFF"
-                    onPress={() => navigation.openDrawer()}
-                />
-            </View>
-            <View style={{ paddingTop: 10}}>
-                <ReusableButton
-                    text="Go to Login"
-                    backgroundColor="#4CAF50"
-                    textColor="#FFFFFF"
-                    onPress={() => navigation.navigate('Login')}
-                />
-            </View>
-            <View style={{ paddingTop: 10}}>
-                <ReusableButton
-                    text="Go to ChatList"
-                    backgroundColor="#4CAF50"
-                    textColor="#FFFFFF"
-                    onPress={() => navigation.navigate('ChatList')}
-                />
-            </View>                     
-            <Button title="Go to OnBoardingScreen" onPress={() => navigation.navigate('OnBoardingScreen')} />
+            <ReusableButton
+                text="Open Drawer"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.openDrawer()}
+            />
+            <ReusableButton
+                text="Go to Login"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('Login')}
+            />
+            <ReusableButton
+                text="Go to ChatList"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('ChatList')}
+            />
+            <ReusableButton
+                text="Go to OnBoardingScreen"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('OnBoardingScreen')}
+            />
+            <ReusableButton
+                text="Logout"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={handleLogOut}
+            />
         </View>
     );
 };

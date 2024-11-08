@@ -8,7 +8,7 @@ import HomeStackNavigation from './HomeStackNavigation';
 
 import ChatListScreen from '../screens/ChatListScreen';
 // import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
- import ChatScreen from '../screens/ChatScreen';
+import ChatScreen from '../screens/ChatScreen';
 // import ProfileScreen from '../screens/ChatScreen';
 
 
@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 
 const AuthStackNavigation = () => {
     return (
-        <Stack.Navigator initialRouteName="Signup">
+        <Stack.Navigator initialRouteName="OnBoardingScreen">
             <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true }} />
             <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: true }} />
             <Stack.Screen name="Home" component={HomeDrawerNavigation} options={{ headerShown: false }} />

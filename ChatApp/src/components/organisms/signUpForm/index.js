@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Text } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
+
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
-import { useNavigation } from "@react-navigation/native";
+
+//  Firebase Sign Up
+import { signUp } from "../../../firebase/authService";
+
+// Function to validatation
+import { validateEmail } from "../../../helper/validateEmail";
+import { validatePassword } from "../../../helper/validatePassword";
+
 
 const SignUpForm = () => {
   const navigation = useNavigation();
@@ -17,10 +26,22 @@ const SignUpForm = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false); // State for toggling confirm password visibility
 
-  const validateEmail = (input) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(input));
+  const handleEmailChange = (input) => {
+    setIsEmailValid(validateEmail(input));
     setEmail(input);
+  };
+
+  // Function to handle sign up
+  const handleSignUp = () => {
+    signUp(email, password, name)
+      .then((user) => {
+        if (user) {
+          //Display an toast message
+          alert("Verification email sent to: " + user.email + ". Please verify your email to login.");
+          navigation.replace('Login'); // Navigate to Home after sign up
+        }
+      })
+      .catch((error) => alert(error.message));
   };
 
   const isButtonEnabled =
@@ -53,7 +74,7 @@ const SignUpForm = () => {
       <Input
         placeholder="Enter your email"
         value={email}
-        onChangeText={validateEmail}
+        onChangeText={handleEmailChange}
         keyboardType="email-address"
         autoCapitalize="none"
         leftIcon={{ type: "material", name: "email" }}
@@ -71,9 +92,7 @@ const SignUpForm = () => {
           secureTextEntry={!isPasswordVisible}
           leftIcon={{ type: "material", name: "lock" }}
           errorMessage={
-            password.length === 0 || password.length >= 8
-              ? ""
-              : "Password must be at least 8 characters"
+            validatePassword(password) ? "" : "Password must be at least 8 characters"
           }
         />
         <TouchableOpacity
@@ -97,9 +116,7 @@ const SignUpForm = () => {
           secureTextEntry={!isConfirmPasswordVisible}
           leftIcon={{ type: "material", name: "lock" }}
           errorMessage={
-            confirmPassword.length === 0 || confirmPassword === password
-              ? ""
-              : "Passwords do not match"
+            validatePassword(password) || confirmPassword === password ? "" : "Password must be at least 8 characters"
           }
         />
         <TouchableOpacity
@@ -125,7 +142,7 @@ const SignUpForm = () => {
           },
         ]}
         disabled={!isFormValid}
-        onPress={() => navigation.navigate("Home")}
+        onPress={handleSignUp}
       >
         <Text style={styles.signupButtonText}>Sign up</Text>
       </TouchableOpacity>

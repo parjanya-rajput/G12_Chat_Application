@@ -11,11 +11,14 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
     "@gorhom/bottom-sheet": "^5.0.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
     "@rneui/themed": "^4.0.0-rc.8",
+    "dotenv": "^16.4.5",
     "expo": "~51.0.28",
+    "expo-constants": "^16.0.2",
     "expo-font": "~12.0.10",
     "expo-linear-gradient": "~13.0.2",
     "expo-router": "^3.5.23",
@@ -27,8 +30,7 @@
     "react-native-gesture-handler": "^2.20.2",
     "react-native-popup-menu": "^0.16.1",
     "react-native-reanimated": "~3.10.1",
-    "react-native-vector-icons": "^10.2.0",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

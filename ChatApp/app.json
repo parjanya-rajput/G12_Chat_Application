@@ -23,6 +23,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "extra": {
+      "apiKey": "process.env.API_KEY"
+    },
     "plugins": [
       "expo-font"
     ]

@@ -1,14 +1,17 @@
 import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+
 // import {...} from "firebase/database";
 // import {...} from "firebase/firestore";
 // import {...} from "firebase/functions";
 // import {...} from "firebase/storage";
 
-// Initialize Firebase
+const apiKey = Constants.expoConfig.extra.apiKey;
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDqUYK7_whhm8b9fNvQI77HozcQjGZCJR8",
+  apiKey: apiKey,
   authDomain: "g12-chatapp-springtalk.firebaseapp.com",
   projectId: "g12-chatapp-springtalk",
   storageBucket: "g12-chatapp-springtalk.firebasestorage.app",

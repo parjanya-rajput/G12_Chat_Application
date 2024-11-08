@@ -4,6 +4,7 @@ import GlobalStyles from '../../globalStyles';
 const { height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+
   button: {
     width: GlobalStyles.BUTTON_WIDTH,
     height: GlobalStyles.BUTTON_HEIGHT,
@@ -12,12 +13,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: GlobalStyles.SIGNIN1_BUTTON_COLOR,
     alignSelf: 'center',
-    position: 'fixed', 
-    // top: 0.06*height,
+    position: 'relative', 
+    top: 10,
     borderColor: '#000000',
     borderWidth: 1,
-
   },
+
   buttonText: {
     fontFamily:'Caros-Light',
     fontSize: GlobalStyles.BUTTON_FONT_SIZE,

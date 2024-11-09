@@ -18,8 +18,8 @@ export default StyleSheet.create({
   },
 
   Icon: {
-    width: GlobalStyles.ONBOARDING_SPLASH_LOGO_WIDTH,
-    height: GlobalStyles.ONBOARDING_SPLASH_LOGO_HEIGHT,
+    width: GlobalStyles.ONBOARDING_SPLASH_LOGO_WIDTH * 0.6,
+    height: GlobalStyles.ONBOARDING_SPLASH_LOGO_HEIGHT * 3,
   },
   
   logoContainer: {
@@ -27,7 +27,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     top: -0.04 * height,
   },
-
+  
   title: {
     color: GlobalStyles.ONBOARDING_TITLE_COLOR,
     fontSize: GlobalStyles.ONBOARDING_TITLE_FONT_SIZE, // Increased scale for larger text
@@ -37,7 +37,7 @@ export default StyleSheet.create({
     lineHeight: GlobalStyles.ONBOARDING_TITLE_LINE_HEIGHT, // Increased line height for better spacing
     marginVertical: GlobalStyles.ONBOARDING_TITLE_MARGIN, // Slightly larger margin
     paddingHorizontal: GlobalStyles.ONBOARDING_PADDING_HORIZONTAL, // Slightly larger padding
-    top: 0.02 * height, // Slightly adjusted top positioning
+    top: 0.01 * height, // Slightly adjusted top positioning
 },
 
 
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     lineHeight: GlobalStyles.ONBOARDING_TITLE_LINE_HEIGHT,
     marginVertical: GlobalStyles.ONBOARDING_TITLE1_MARGIN,
     paddingHorizontal: GlobalStyles.ONBOARDING_PADDING_HORIZONTAL,
-    top: 0.03 * height,
+    top: 0.02 * height,
   },
   
   subtitle: {
@@ -61,7 +61,7 @@ export default StyleSheet.create({
     width: '100%',
     paddingHorizontal: GlobalStyles.ONBOARDING_PADDING_HORIZONTAL,
     marginBottom: GlobalStyles.ONBOARDING_SUBTITLE_MARGIN,
-    top: 0.05 * height,
+    top: 0.04 * height,
   },
 
   socialButtonsContainer: {
@@ -69,7 +69,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: '60%',
     marginVertical: GlobalStyles.ONBOARDING_SOCIALBUTTON_MARGIN,
-    top: 0.05 * height,
+    top: 0.04 * height,
   },
 
   socialButton: {
@@ -92,7 +92,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: GlobalStyles.ONBOARDING_TITLE1_MARGIN,
-    top: 0.05 * height,
+    top: 0.04 * height,
   },
   
   line: {
@@ -110,7 +110,7 @@ export default StyleSheet.create({
 
   loginTextContainer: {
     marginTop: GlobalStyles.ONBOARDING_TEXT_FONT_SIZE,
-    top: 0.08 * height,
+    top: 0.07 * height,
   },
 
   loginText: {

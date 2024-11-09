@@ -15,7 +15,7 @@ const OnBoradingForm = ({ navigation }) => {
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image source={require('../../../../assets//Logo.png')} style={styles.Icon} />
+          <Image source={require('../../../../assets/AppIcon/SpringTalkIcon.png')} style={styles.Icon} />
         </View>
         <Text style={styles.title}>Connect </Text>
         <Text style={styles.title}>friends </Text>
@@ -50,7 +50,8 @@ const OnBoradingForm = ({ navigation }) => {
             backgroundColor="#FFFFFF"
             textColor="#000E08"
             onPress={() => navigation.navigate('Signup')}
-            topval={0.06 * height}
+            topval={0.05 * height}
+            disabled={false}  // Ensures the button is enabled
           />
         </TouchableOpacity>
 

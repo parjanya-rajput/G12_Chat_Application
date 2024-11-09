@@ -1,28 +1,27 @@
+// LoginForm.js
 import React, { useState } from 'react';
-import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input, Text } from '@rneui/themed';
+import { Text } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
-// Styles import
+// Import styles and reusable components
 import GlobalStyles from '../../globalStyles';
 import styles from './style';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import ReusableButton from '../../atoms/ReusableButton/index'; // Import ReusableButton
 
-//Import the Firebase Login
+// Import Firebase and validation helpers
 import { signIn } from '../../../firebase/authService';
-
-// Import validation
 import { validateEmail } from '../../../helper/validateEmail';
 import { validatePassword } from '../../../helper/validatePassword';
-import HomeStackNavigation from '../../../navigations/HomeStackNavigation';
+import CustomInput from '../../atoms/InputField';
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // *State for toggling password visibility*
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -32,88 +31,73 @@ const LoginForm = () => {
   const isFormValid = email && password;
 
   const handleSignIn = () => {
-    setIsLoading(true);
     signIn(email, password)
       .then((user) => {
         if (user) {
-          if (user.emailVerified) {
-            //change to homestack and delete the authstack
-            // <NavigationContainer>
-            //   <HomeStackNavigation />
-            // </NavigationContainer>
-            navigation.replace('Home');
-            setIsLoading(false);
-          }
-          else
-            alert('Please verify your email address before signing in');
-          //Handle the resend the verification email edge case
+          if (user.emailVerified) navigation.replace('Home');
+          else alert('Please verify your email address before signing in');
         }
       })
       .catch((error) => alert(error.message.toString()));
-  }
-  if (isLoading) {
-    // Show a loading indicator while Firebase is checking the auth state
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log in to SpringTalk</Text>
+      <Text style={styles.title}>Log in to Chatbox</Text>
       <Text style={styles.subtitle}>
         Welcome back! Sign in using your social account or email to continue us
       </Text>
 
-      <Input
+      {/* Email Input Field */}
+      <CustomInput
         placeholder="Enter your email"
         value={email}
         onChangeText={handleEmailChange}
         keyboardType="email-address"
         autoCapitalize="none"
-        leftIcon={{ type: 'material', name: 'email' }}
-        errorMessage={isEmailValid || email.length === 0 ? '' : 'Invalid email format'}
+        leftIconName="email"
+        errorMessage={isEmailValid ? '' : 'Invalid email format'}
       />
 
+      {/* Password Input Field */}
       <View style={styles.passwordInputContainer}>
-        <Input
+        <CustomInput
           placeholder="Enter your password"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={!isPasswordVisible} // *Toggle visibility based on state*
-          leftIcon={{ type: 'material', name: 'lock' }}
+          secureTextEntry={!isPasswordVisible}
+          textContentType="oneTimeCode"
+          leftIconName="lock"
           errorMessage={
-            validatePassword(password)
-              ? ''
-              : 'Password must be at least 8 characters'
+            validatePassword(password) ? '' : 'Password must be at least 8 characters'
           }
         />
         <TouchableOpacity
           style={styles.eyeButton}
-          onPress={() => setIsPasswordVisible(!isPasswordVisible)} // *Toggle password visibility*
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
         >
           <Icon
-            name={isPasswordVisible ? 'eye' : 'eye-slash'} // *Change icon based on visibility*
+            name={isPasswordVisible ? 'eye' : 'eye-slash'}
             size={20}
             color="#888"
           />
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={[styles.loginButton, { backgroundColor: isFormValid ? GlobalStyles.SIGNIN1_BUTTON_COLOR : GlobalStyles.SIGNIN_BUTTON_COLOR }]}
-        disabled={!isFormValid}
+      {/* ReusableButton for Login */}
+      <ReusableButton
+        text="Log in"
+        backgroundColor={isFormValid ? GlobalStyles.SIGNIN1_BUTTON_COLOR : GlobalStyles.SIGNIN_BUTTON_COLOR}
+        textColor="#FFFFFF"
         onPress={handleSignIn}
-      >
-        <Text style={styles.loginButtonText}>Log in</Text>
-      </TouchableOpacity>
+        disabled={!isFormValid}
+      />
 
       <TouchableOpacity>
         <Text style={styles.forgotPasswordText}>Forgot password?</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 export default LoginForm;

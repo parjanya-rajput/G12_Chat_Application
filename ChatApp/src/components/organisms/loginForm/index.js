@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Text } from '@rneui/themed';
 
 // Styles import
 import GlobalStyles from '../../globalStyles';
 import styles from './style';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
 //Import the Firebase Login
 import { signIn } from '../../../firebase/authService';
@@ -14,6 +14,7 @@ import { signIn } from '../../../firebase/authService';
 // Import validation
 import { validateEmail } from '../../../helper/validateEmail';
 import { validatePassword } from '../../../helper/validatePassword';
+import HomeStackNavigation from '../../../navigations/HomeStackNavigation';
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // *State for toggling password visibility*
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -30,11 +32,18 @@ const LoginForm = () => {
   const isFormValid = email && password;
 
   const handleSignIn = () => {
+    setIsLoading(true);
     signIn(email, password)
       .then((user) => {
         if (user) {
-          if (user.emailVerified)
-            navigation.replace('Home'); // *Navigate to Home after sign in*
+          if (user.emailVerified) {
+            //change to homestack and delete the authstack
+            // <NavigationContainer>
+            //   <HomeStackNavigation />
+            // </NavigationContainer>
+            navigation.replace('Home');
+            setIsLoading(false);
+          }
           else
             alert('Please verify your email address before signing in');
           //Handle the resend the verification email edge case
@@ -42,10 +51,17 @@ const LoginForm = () => {
       })
       .catch((error) => alert(error.message.toString()));
   }
-
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log in to Chatbox</Text>
+      <Text style={styles.title}>Log in to SpringTalk</Text>
       <Text style={styles.subtitle}>
         Welcome back! Sign in using your social account or email to continue us
       </Text>

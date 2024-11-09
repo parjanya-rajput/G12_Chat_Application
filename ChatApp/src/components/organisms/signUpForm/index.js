@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -23,8 +23,8 @@ const SignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false); // State for toggling confirm password visibility
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false); // State for toggling confirm password visibility
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -33,16 +33,27 @@ const SignUpForm = () => {
 
   // Function to handle sign up
   const handleSignUp = () => {
+    setIsLoading(true);
     signUp(email, password, name)
       .then((user) => {
         if (user) {
           //Display an toast message
           alert("Verification email sent to: " + user.email + ". Please verify your email to login.");
           navigation.replace('Login'); // Navigate to Home after sign up
+          setIsLoading(false);
         }
       })
       .catch((error) => alert(error.message));
   };
+
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   const isButtonEnabled =
     isEmailValid && password.length >= 8 && password === confirmPassword;

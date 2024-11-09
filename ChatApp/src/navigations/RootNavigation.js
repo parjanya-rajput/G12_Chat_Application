@@ -37,7 +37,8 @@ const RootNavigation = () => {
     }
     return (
         <NavigationContainer>
-            {user ? <HomeStackNavigation /> : <AuthStackNavigation />}
+            {/* {user ? <HomeStackNavigation /> : <AuthStackNavigation />} */}
+            <AuthStackNavigation />
         </NavigationContainer>
     );
 };

@@ -1,25 +1,25 @@
 // LoginForm.js
-import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Text } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import { View, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Text } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
 
 // Import styles and reusable components
-import GlobalStyles from '../../globalStyles';
-import styles from './style';
-import ReusableButton from '../../atoms/ReusableButton/index'; // Import ReusableButton
+import GlobalStyles from "../../globalStyles";
+import styles from "./style";
+import ReusableButton from "../../atoms/ReusableButton/index"; // Import ReusableButton
 
 // Import Firebase and validation helpers
-import { signIn } from '../../../firebase/authService';
-import { validateEmail } from '../../../helper/validateEmail';
-import { validatePassword } from '../../../helper/validatePassword';
-import CustomInput from '../../atoms/InputField';
+import { signIn } from "../../../firebase/authService";
+import { validateEmail } from "../../../helper/validateEmail";
+import { validatePassword } from "../../../helper/validatePassword";
+import CustomInput from "../../atoms/InputField";
 
 const LoginForm = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -34,8 +34,8 @@ const LoginForm = () => {
     signIn(email, password)
       .then((user) => {
         if (user) {
-          if (user.emailVerified) navigation.replace('Home');
-          else alert('Please verify your email address before signing in');
+          if (user.emailVerified) navigation.replace("Home");
+          else alert("Please verify your email address before signing in");
         }
       })
       .catch((error) => alert(error.message.toString()));
@@ -56,7 +56,7 @@ const LoginForm = () => {
         keyboardType="email-address"
         autoCapitalize="none"
         leftIconName="email"
-        errorMessage={isEmailValid ? '' : 'Invalid email format'}
+        errorMessage={isEmailValid ? "" : "Invalid email format"}
       />
 
       {/* Password Input Field */}
@@ -69,15 +69,16 @@ const LoginForm = () => {
           textContentType="oneTimeCode"
           leftIconName="lock"
           errorMessage={
-            validatePassword(password) ? '' : 'Password must be at least 8 characters'
+            validatePassword(password)
+              ? ""
+              : "Password must be at least 8 characters"
           }
         />
         <TouchableOpacity
           style={styles.eyeButton}
-          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-        >
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
           <Icon
-            name={isPasswordVisible ? 'eye' : 'eye-slash'}
+            name={isPasswordVisible ? "eye" : "eye-slash"}
             size={20}
             color="#888"
           />
@@ -87,7 +88,11 @@ const LoginForm = () => {
       {/* ReusableButton for Login */}
       <ReusableButton
         text="Log in"
-        backgroundColor={isFormValid ? GlobalStyles.SIGNIN1_BUTTON_COLOR : GlobalStyles.SIGNIN_BUTTON_COLOR}
+        backgroundColor={
+          isFormValid
+            ? GlobalStyles.SIGNIN1_BUTTON_COLOR
+            : GlobalStyles.SIGNIN_BUTTON_COLOR
+        }
         textColor="#FFFFFF"
         onPress={handleSignIn}
         disabled={!isFormValid}

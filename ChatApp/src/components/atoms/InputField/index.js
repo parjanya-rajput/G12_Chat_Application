@@ -1,19 +1,19 @@
 // components/InputFields/CustomInput.js
 
-import React from 'react';
-import { Input } from 'react-native-elements';
+import React from "react";
+import { Input } from "react-native-elements";
 
 const CustomInput = ({
   placeholder,
   value,
   onChangeText,
-  keyboardType = 'default',
-  autoCapitalize = 'none',
+  keyboardType = "default",
+  autoCapitalize = "none",
   secureTextEntry = false,
-  textContentType = 'none', // Add textContentType as a prop
-  leftIconType = 'material',
+  textContentType = "none", // Add textContentType as a prop
+  leftIconType = "material",
   leftIconName,
-  errorMessage = '',
+  errorMessage = "",
 }) => {
   return (
     <Input
@@ -26,6 +26,7 @@ const CustomInput = ({
       textContentType={textContentType} // Apply textContentType
       leftIcon={{ type: leftIconType, name: leftIconName }}
       errorMessage={errorMessage}
+      inputStyle={{ fontFamily: "cretype-caros" }}
     />
   );
 };

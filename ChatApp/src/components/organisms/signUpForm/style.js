@@ -8,13 +8,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
+    fontFamily: "Caros-Bold",
     textAlign: "center",
     fontSize: 24,
-    fontWeight: "bold",
     color: GlobalStyles.SIGNIN1_BUTTON_COLOR,
     marginBottom: 10,
   },
   subtitle: {
+    fontFamily: "cretype-caros",
     alignItems: "center",
     fontSize: 14,
     color: "#666",
@@ -38,9 +39,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   signupButtonText: {
+    fontFamily: "Caros-Bold",
     color: "#fff",
     fontSize: 18,
-    fontWeight: "bold",
   },
 });
 export default styles;

@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import {...} from "firebase/database";
 // import {...} from "firebase/firestore";
@@ -16,7 +16,7 @@ const firebaseConfig = {
   storageBucket: "g12-chatapp-springtalk.firebasestorage.app",
   messagingSenderId: "375115558069",
   appId: "1:375115558069:web:4ad63c2a0ce4ba125922fc",
-  measurementId: "G-9Y2PX0FN70"
+  measurementId: "G-9Y2PX0FN70",
 };
 
 const app = initializeApp(firebaseConfig);

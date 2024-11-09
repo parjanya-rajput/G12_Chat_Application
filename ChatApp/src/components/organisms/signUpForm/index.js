@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Input, Text } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-
+import ReusableButton from "../../atoms/ReusableButton/index"
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
 
-//  Firebase Sign Up
+// Firebase Sign Up
 import { signUp } from "../../../firebase/authService";
 
-// Function to validatation
+// Function to validation
 import { validateEmail } from "../../../helper/validateEmail";
 import { validatePassword } from "../../../helper/validatePassword";
-
+import CustomInput from "../../atoms/InputField";
 
 const SignUpForm = () => {
   const navigation = useNavigation();
@@ -23,8 +23,8 @@ const SignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false); // State for toggling confirm password visibility
-  const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false); // State for toggling confirm password visibility
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -33,36 +33,25 @@ const SignUpForm = () => {
 
   // Function to handle sign up
   const handleSignUp = () => {
-    setIsLoading(true);
     signUp(email, password, name)
       .then((user) => {
         if (user) {
-          //Display an toast message
-          alert("Verification email sent to: " + user.email + ". Please verify your email to login.");
-          navigation.replace('Login'); // Navigate to Home after sign up
-          setIsLoading(false);
+          // Display a toast message
+          alert(
+            "Verification email sent to: " +
+              user.email +
+              ". Please verify your email to login."
+          );
+          navigation.replace("Login"); // Navigate to Home after sign up
         }
       })
       .catch((error) => alert(error.message));
   };
 
-  if (isLoading) {
-    // Show a loading indicator while Firebase is checking the auth state
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
   const isButtonEnabled =
     isEmailValid && password.length >= 8 && password === confirmPassword;
   const isFormValid =
-    name &&
-    email &&
-    password &&
-    confirmPassword &&
-    password === confirmPassword;
+    name && email && password && confirmPassword && password === confirmPassword;
 
   return (
     <View style={styles.container}>
@@ -73,37 +62,38 @@ const SignUpForm = () => {
       </Text>
 
       {/* Name Input Field */}
-      <Input
+      <CustomInput
         placeholder="Enter your name"
         value={name}
         onChangeText={setName}
-        autoCapitalize="words"
-        leftIcon={{ type: "material", name: "person" }}
+        autoCapitalize="words" // Capitalize each word
+        leftIconName="person" // Set the left icon to "person"
       />
 
       {/* Email Input Field */}
-      <Input
+      <CustomInput
         placeholder="Enter your email"
         value={email}
         onChangeText={handleEmailChange}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        leftIcon={{ type: "material", name: "email" }}
-        errorMessage={
-          isEmailValid || email.length === 0 ? "" : "Invalid email format"
-        }
+        keyboardType="email-address" // Set keyboard type for email input
+        autoCapitalize="none" // Disable auto-capitalization for email
+        leftIconName="email" // Set the left icon to "email"
+        errorMessage={isEmailValid ? "" : "Invalid email format"} // Show error if email is invalid
       />
 
       {/* Password Input Field */}
       <View style={styles.passwordInputContainer}>
-        <Input
+        <CustomInput
           placeholder="Enter your password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={!isPasswordVisible}
-          leftIcon={{ type: "material", name: "lock" }}
+          textContentType="oneTimeCode" // Prevent suggestions on password field
+          leftIconName="lock"
           errorMessage={
-            validatePassword(password) ? "" : "Password must be at least 8 characters"
+            validatePassword(password)
+              ? ""
+              : "Password must be at least 8 characters"
           }
         />
         <TouchableOpacity
@@ -120,19 +110,24 @@ const SignUpForm = () => {
 
       {/* Confirm Password Input Field */}
       <View style={styles.passwordInputContainer}>
-        <Input
+        <CustomInput
           placeholder="Confirm your password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry={!isConfirmPasswordVisible}
-          leftIcon={{ type: "material", name: "lock" }}
+          secureTextEntry={!isConfirmPasswordVisible} // Toggle password visibility
+          textContentType="oneTimeCode" // Prevent keyboard suggestions
+          leftIconName="lock" // Set the left icon to "lock"
           errorMessage={
-            validatePassword(password) || confirmPassword === password ? "" : "Password must be at least 8 characters"
-          }
+            validatePassword(password) || confirmPassword === password
+              ? ""
+              : "Password must be at least 8 characters"
+          } // Show error if passwords don't match or are invalid
         />
         <TouchableOpacity
           style={styles.eyeButton}
-          onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+          onPress={() =>
+            setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+          }
         >
           <Icon
             name={isConfirmPasswordVisible ? "eye" : "eye-slash"}
@@ -142,21 +137,18 @@ const SignUpForm = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Log In Button */}
-      <TouchableOpacity
-        style={[
-          styles.signupButton,
-          {
-            backgroundColor: isFormValid
-              ? GlobalStyles.SIGNIN1_BUTTON_COLOR
-              : GlobalStyles.SIGNIN_BUTTON_COLOR,
-          },
-        ]}
-        disabled={!isFormValid}
+      <ReusableButton
+        text="Sign up"
+        backgroundColor={
+          isFormValid
+            ? GlobalStyles.SIGNIN1_BUTTON_COLOR
+            : GlobalStyles.SIGNIN_BUTTON_COLOR
+        }
+        textColor="#FFFFFF" // or any other color you prefer
         onPress={handleSignUp}
-      >
-        <Text style={styles.signupButtonText}>Sign up</Text>
-      </TouchableOpacity>
+        topval={0} // adjust top value as needed
+        disabled={!isFormValid} 
+        />
     </View>
   );
 };

@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import ReusableButton from "../../atoms/ReusableButton/index"
+import ReusableButton from "../../atoms/ReusableButton/index";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
 
@@ -51,7 +51,11 @@ const SignUpForm = () => {
   const isButtonEnabled =
     isEmailValid && password.length >= 8 && password === confirmPassword;
   const isFormValid =
-    name && email && password && confirmPassword && password === confirmPassword;
+    name &&
+    email &&
+    password &&
+    confirmPassword &&
+    password === confirmPassword;
 
   return (
     <View style={styles.container}>
@@ -68,6 +72,7 @@ const SignUpForm = () => {
         onChangeText={setName}
         autoCapitalize="words" // Capitalize each word
         leftIconName="person" // Set the left icon to "person"
+        style={{ fontFamily: "cretype-caros" }}
       />
 
       {/* Email Input Field */}
@@ -79,6 +84,7 @@ const SignUpForm = () => {
         autoCapitalize="none" // Disable auto-capitalization for email
         leftIconName="email" // Set the left icon to "email"
         errorMessage={isEmailValid ? "" : "Invalid email format"} // Show error if email is invalid
+        style={{ fontFamily: "cretype-caros" }}
       />
 
       {/* Password Input Field */}
@@ -98,8 +104,7 @@ const SignUpForm = () => {
         />
         <TouchableOpacity
           style={styles.eyeButton}
-          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-        >
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
           <Icon
             name={isPasswordVisible ? "eye" : "eye-slash"}
             size={20}
@@ -127,8 +132,7 @@ const SignUpForm = () => {
           style={styles.eyeButton}
           onPress={() =>
             setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-          }
-        >
+          }>
           <Icon
             name={isConfirmPasswordVisible ? "eye" : "eye-slash"}
             size={20}
@@ -147,8 +151,8 @@ const SignUpForm = () => {
         textColor="#FFFFFF" // or any other color you prefer
         onPress={handleSignUp}
         topval={0} // adjust top value as needed
-        disabled={!isFormValid} 
-        />
+        disabled={!isFormValid}
+      />
     </View>
   );
 };

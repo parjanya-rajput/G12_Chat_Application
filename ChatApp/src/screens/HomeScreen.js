@@ -47,6 +47,12 @@ const HomeScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate('OnBoardingScreen')}
             />
             <ReusableButton
+                text="Go to ForgotPasswordScreen"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('ForgetPassword')}
+            />
+            <ReusableButton
                 text="Logout"
                 backgroundColor="#4CAF50"
                 textColor="#FFFFFF"

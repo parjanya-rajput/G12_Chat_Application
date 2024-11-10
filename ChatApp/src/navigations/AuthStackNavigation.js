@@ -5,7 +5,7 @@ import SignupScreen from '../screens/SignupScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
 import HomeDrawerNavigation from './HomeDrawerNavigation';
 import HomeStackNavigation from './HomeStackNavigation';
-
+import ForgetPassword from '../screens/ForgotPasswordScreen';
 import ChatListScreen from '../screens/ChatListScreen';
 // import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
 import ChatScreen from '../screens/ChatScreen';
@@ -25,6 +25,7 @@ const AuthStackNavigation = () => {
             {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
             <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
             {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} /> */}
+            <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

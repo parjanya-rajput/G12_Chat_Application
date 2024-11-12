@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Animated,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -23,68 +24,56 @@ const initialData = [
 ];
 
 const ProfileView = () => {
-  const [openSwipeRef, setOpenSwipeRef] = useState(null);
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(initialData);
+  const [refreshing, setRefreshing] = useState(false); // Step 1: Define a refreshing state
   const scrollY = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const fetchedProfile = await ProfileFetch.execute();
-        setProfile(fetchedProfile);
-        console.log(fetchedProfile);
-      } catch (err) {
-        console.log(err);
-        setIsLoading(false);
-      }
-    };
+  const loadProfile = async () => {
+    try {
+      const fetchedProfile = await ProfileFetch.execute();
+      setProfile(fetchedProfile);
+      console.log(fetchedProfile);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadProfile();
   }, []);
 
   useEffect(() => {
     if (profile) {
       const updatedData = initialData.map((item) => {
-        if (item.label === "Username") {
-          return { ...item, infoText: profile.name }; // Update Name dynamically
-        }
-        if (item.label === "Handle") {
-          return { ...item, infoText: profile.user_name }; // Update Username dynamically
-        }
-        if (item.label === "Email Address") {
-          return { ...item, infoText: profile.email }; // Update Email dynamically
-        }
-        if (item.label === "Phone Number") {
-          return { ...item, infoText: profile.phone }; // Update Phone dynamically
-        }
-        if (item.label === "Bio") {
-          return { ...item, infoText: profile.bio }; // Update Bio dynamically
-        }
+        if (item.label === "Username") return { ...item, infoText: profile.name };
+        if (item.label === "Handle") return { ...item, infoText: profile.user_name };
+        if (item.label === "Email Address") return { ...item, infoText: profile.email };
+        if (item.label === "Phone Number") return { ...item, infoText: profile.phone };
+        if (item.label === "Bio") return { ...item, infoText: profile.bio };
         return item;
       });
       setData(updatedData);
-      setIsLoading(false);
     }
   }, [profile]);
 
+  const handleRefresh = async () => {
+    setRefreshing(true); // Step 2: Set refreshing to true when refresh starts
+    await loadProfile(); // Reload profile data
+    setRefreshing(false); // Step 3: Set refreshing to false once data is loaded
+  };
+
   if (isLoading) {
-    // Show a loading indicator while Firebase is checking the auth state
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
-
-  const handleSwipeOpen = (ref) => {
-    if (openSwipeRef && openSwipeRef !== ref) {
-      openSwipeRef.close();
-    }
-    setOpenSwipeRef(ref);
-  };
 
   const profileHeight = scrollY.interpolate({
     inputRange: [0, 300],
@@ -100,7 +89,6 @@ const ProfileView = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header with title and back button */}
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -115,13 +103,12 @@ const ProfileView = () => {
         <Text style={styles.headerTitle}>User Profile</Text>
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => navigation.navigate("EditProfile")}
+          onPress={() => navigation.navigate("EditProfile" , {profile})}
         >
           <Ionicons name="create-outline" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
 
-      {/* Profile Pics Slider */}
       <Animated.View
         style={[
           styles.profileContainer,
@@ -150,25 +137,9 @@ const ProfileView = () => {
               {profile.is_online === "true" ? "Online" : "Offline"}
             </Text>
           </View>
-
-          {/* <View style={styles.contactOptions}>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Icon name="message" size={28} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Icon name="videocam" size={28} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Icon name="call" size={28} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Icon name="more-horiz" size={28} color="#fff" />
-                        </TouchableOpacity>
-                    </View> */}
         </View>
       </Animated.View>
 
-      {/* Chat List */}
       <View style={styles.whiteBackgroundSection}>
         <Animated.FlatList
           data={data}
@@ -179,12 +150,13 @@ const ProfileView = () => {
             </View>
           )}
           keyExtractor={(item) => item.id}
-          extraData={openSwipeRef}
+          onRefresh={handleRefresh} // Refresh function
+          refreshing={refreshing} // Step 4: Bind refreshing state to FlatList's refreshing prop
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: false } // Use native driver for better performance
+            { useNativeDriver: false }
           )}
-          scrollEventThrottle={16} // Throttle scroll events for smoother animation
+          scrollEventThrottle={16}
         />
       </View>
     </SafeAreaView>

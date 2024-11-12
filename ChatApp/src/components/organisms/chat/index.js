@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import styles from './style';
+import { Ionicons } from '@expo/vector-icons';
+// import Feather from 'react-native-vector-icons/Feather';
 
 const Chat = ({ route, navigation }) => {
     const { username, profileImage } = route.params;
@@ -11,7 +13,7 @@ const Chat = ({ route, navigation }) => {
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <FontAwesome name="arrow-left" size={20} color="white" />
+                    <FontAwesome name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
 
                 {/* Profile Image */}
@@ -47,13 +49,13 @@ const Chat = ({ route, navigation }) => {
 
                 <View style={styles.headerIcons}>
                     <TouchableOpacity style={styles.videocallButton}>
-                        <FontAwesome name="video-camera" size={23} color="white" />
+                        <FontAwesome name="video-camera" size={23} color="#4A90E2" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.audiocallButton}>
-                        <FontAwesome name="phone" size={23} color="white" />
+                        <FontAwesome name="phone" size={23} color="#4A90E2" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.moreoptButton}>
-                        <MaterialIcons name="more-vert" size={23} color="white" />
+                        <MaterialIcons name="more-vert" size={23} color="#4A90E2" />
                     </TouchableOpacity>
                 </View>
 
@@ -61,23 +63,25 @@ const Chat = ({ route, navigation }) => {
 
             {/* Message Input */}
             <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.emojiButton}>
-                    <FontAwesome name="smile-o" size={24} color="black" style={styles.emojiIcon} />
+                <TouchableOpacity style={styles.autocompleteButton}>
+                    <Ionicons name="bulb-outline" size={20} color="#4CAF50" />
                 </TouchableOpacity>
                 <TextInput
                     style={styles.input}
                     placeholder="Message"
                     placeholderTextColor="black"
                 />
-                <TouchableOpacity>
-                    <FontAwesome name="paperclip" size={23} color="black" style={styles.paperclipIcon} />
+
+                <TouchableOpacity style={styles.sendButton}>
+                    <Ionicons name="send" size={20} color="#4CAF50" style={{ transform: [{ rotate: '-30deg' }] }} />
                 </TouchableOpacity>
+                
                 <TouchableOpacity style={styles.cameraButton}>
-                    <FontAwesome name="camera" size={16} color="white" style={styles.cameraIcon} />
+                    <FontAwesome name="camera" size={20} color="black" style={styles.cameraIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.micButton}>
+                {/* <TouchableOpacity style={styles.micButton}>
                     <FontAwesome name="microphone" size={20} color="white" style={styles.micIcon} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         </View>
     );

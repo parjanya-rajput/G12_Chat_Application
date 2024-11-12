@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Animated,
   SafeAreaView,
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
   TextInput,
   Switch,
+  ActivityIndicator,
 } from "react-native";
 import { ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -17,21 +17,25 @@ import ReusableButton from "../../atoms/ReusableButton";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
 
+import { ProfileUpdate } from "../../../domain/Profile";
+
 import { useRoute } from '@react-navigation/native';
 
 const UpdateProfileScreen = () => {
 
   const route = useRoute();
-  const { profile } = route.params; 
+  const { profile } = route.params;
 
 
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio);
-  const [phoneNumber, setPhoneNumber] = useState(profile.phone);
+  const [phone, setPhone] = useState(profile.phone);
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
   );
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -51,6 +55,27 @@ const UpdateProfileScreen = () => {
   const handleProfilePicChange = () => {
     alert("Profile picture change functionality goes here.");
   };
+
+  const handleUpdateProfile = async () => {
+    setIsLoading(true);
+    try {
+      await ProfileUpdate.execute({ name, bio, phone, profilePic, isOnline });
+      setIsLoading(false);
+      alert("Profile updated successfully!");
+      navigation.goBack();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -86,7 +111,7 @@ const UpdateProfileScreen = () => {
             placeholderTextColor="#888"
           />
           <Text style={styles.userHandle}>
-            @{name.toLowerCase().replace(" ", "")}
+            @{name}
           </Text>
 
           <View style={styles.statusContainer}>
@@ -125,8 +150,8 @@ const UpdateProfileScreen = () => {
             <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.infoInput}
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              value={phone}
+              onChangeText={setPhone}
               placeholder="Enter your phone number"
               keyboardType="phone-pad"
               placeholderTextColor="#888"
@@ -150,7 +175,7 @@ const UpdateProfileScreen = () => {
           text="Save Changes"
           backgroundColor={GlobalStyles.SIGNIN1_BUTTON_COLOR}
           textColor="#FFFFFF"
-          onPress={() => alert("Changes saved successfully!")}
+          onPress={handleUpdateProfile}
         />
       </View>
     </SafeAreaView>

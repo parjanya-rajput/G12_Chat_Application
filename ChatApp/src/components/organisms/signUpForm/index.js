@@ -45,7 +45,7 @@ const SignUpForm = () => {
             ". Please verify your email to login."
           );
           setIsLoading(false);
-          navigation.replace("Login"); // Navigate to Home after sign up
+          navigation.replace("CreateProfileScreen"); // Navigate to Home after sign up
         }
       })
       .catch((error) => alert(error.message));

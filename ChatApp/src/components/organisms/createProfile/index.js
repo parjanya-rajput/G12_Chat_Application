@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import {
   Animated,
   SafeAreaView,
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
   TextInput,
   Switch,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -18,15 +18,18 @@ import ReusableButton from "../../atoms/ReusableButton";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
 
-const CreatProfile = () => {
-  const [name, setName] = useState("Jhon Abraham");
+import { ProfileCreate } from "../../../domain/Profile";
+
+const CreateProfile = () => {
+  const [name, setName] = useState("");
   const [bio, setBio] = useState("My nickname is Dhruvin Akhaja");
-  const [phoneNumber, setPhoneNumber] = useState("(320) 555-0104");
+  const [phone, setPhone] = useState("(320) 555-0104");
   const [email, setEmail] = useState("jhon.abraham@example.com"); // Static email
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
   );
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -49,9 +52,36 @@ const CreatProfile = () => {
 
   const handleEmailFieldPress = () => {
     Alert.alert("Uneditable Field", "This field cannot be edited.", [
-      { text: "OK", onPress: () => {} },
+      { text: "OK", onPress: () => { } },
     ]);
   };
+
+  const handleCreateProfile = async () => {
+    setIsLoading(true);
+    try {
+      await ProfileCreate.execute({
+        name,
+        bio,
+        phone,
+        profilePic,
+        isOnline,
+      });
+      setIsLoading(false);
+      alert("Profile created successfully!");
+      navigation.navigate("Home");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -62,7 +92,7 @@ const CreatProfile = () => {
         >
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Creat Profile</Text>
+        <Text style={styles.headerTitle}>Create Profile</Text>
       </View>
 
       <ScrollView
@@ -149,8 +179,8 @@ const CreatProfile = () => {
             <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.infoInput}
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              value={phone}
+              onChangeText={setPhone}
               placeholder="Enter your phone number"
               keyboardType="phone-pad"
               placeholderTextColor="#888"
@@ -171,14 +201,14 @@ const CreatProfile = () => {
 
       <View style={styles.saveButtonContainer}>
         <ReusableButton
-          text="Save Changes"
+          text="Create Profile"
           backgroundColor={GlobalStyles.SIGNIN1_BUTTON_COLOR}
           textColor="#FFFFFF"
-          onPress={() => alert("Changes saved successfully!")}
+          onPress={handleCreateProfile}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-export default CreatProfile;
+export default CreateProfile;

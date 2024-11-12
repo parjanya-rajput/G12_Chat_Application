@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={{padding:20}}>
+        <View style={{ padding: 20 }}>
             {/* <ReusableButton
                 text="Open Drawer"
                 backgroundColor="#4CAF50"
@@ -57,11 +57,17 @@ const HomeScreen = ({ navigation }) => {
                 textColor="#FFFFFF"
                 onPress={handleLogOut}
             />
-             <ReusableButton
-                text="CreatProfile"
+            <ReusableButton
+                text="User List"
                 backgroundColor="#4CAF50"
                 textColor="#FFFFFF"
-                onPress={() => navigation.navigate('CreatProfileScreen')}
+                onPress={() => navigation.navigate('UserList')}
+            />
+            <ReusableButton
+                text="CreateProfile"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('CreateProfileScreen')}
             />
         </View>
     );

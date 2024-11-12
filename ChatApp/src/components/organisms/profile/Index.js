@@ -16,11 +16,11 @@ import styles from "./style";
 import { ProfileFetch } from "../../../domain/Profile";
 
 const initialData = [
-  { id: "1", label: "Username", infoText: "Jhon Abraham" },
-  { id: "2", label: "Handle", infoText: "@handle" },
-  { id: "3", label: "Email Address", infoText: "abcd@gmail.com" },
-  { id: "4", label: "Phone Number", infoText: "(320) 555-0104" },
-  { id: "5", label: "Bio", infoText: "My Nic name is Dhruvin Akhaja" },
+  { id: '1', label: 'Username', infoText: 'UserName' },
+  { id: '2', label: 'Handle', infoText: '@handle' },
+  { id: '3', label: 'Email Address', infoText: 'user@gmail.com' },
+  { id: '4', label: 'Phone Number', infoText: '123456789' },
+  { id: '5', label: 'Bio', infoText: 'Spring Talk' },
 ];
 
 const ProfileView = () => {
@@ -49,16 +49,21 @@ const ProfileView = () => {
 
   useEffect(() => {
     if (profile) {
-      const updatedData = initialData.map((item) => {
-        if (item.label === "Username") return { ...item, infoText: profile.name };
-        if (item.label === "Handle") return { ...item, infoText: profile.user_name };
-        if (item.label === "Email Address") return { ...item, infoText: profile.email };
-        if (item.label === "Phone Number") return { ...item, infoText: profile.phone };
-        if (item.label === "Bio") return { ...item, infoText: profile.bio };
+      const updatedData = initialData.map(item => {
+        if (item.label === 'Username') return { ...item, infoText: profile.name };
+        if (item.label === 'Handle') return { ...item, infoText: profile.user_name };
+        if (item.label === 'Email Address') return { ...item, infoText: profile.email };
+        if (item.label === 'Phone Number') return { ...item, infoText: profile.phone };
+        if (item.label === 'Bio') return { ...item, infoText: profile.bio };
         return item;
       });
       setData(updatedData);
     }
+    // else {
+    //   //Buggy behaviour
+    //   alert("Profile is not found!");
+    //   return;
+    // }
   }, [profile]);
 
   const handleRefresh = async () => {
@@ -103,23 +108,18 @@ const ProfileView = () => {
         <Text style={styles.headerTitle}>User Profile</Text>
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => navigation.navigate("EditProfile" , {profile})}
+          onPress={() => navigation.navigate("EditProfile", { profile })}
         >
           <Ionicons name="create-outline" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
 
       <Animated.View
-        style={[
-          styles.profileContainer,
-          { height: profileHeight, opacity: profileOpacity },
-        ]}
+        style={[styles.profileContainer, { height: profileHeight, opacity: profileOpacity }]}
       >
         <View style={styles.profile}>
           <Image
-            source={{
-              uri: "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg",
-            }}
+            source={{ uri: "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg" }}
             style={styles.profileImage}
           />
           <Text style={styles.username}>{profile.name}</Text>
@@ -127,14 +127,8 @@ const ProfileView = () => {
 
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
-            <Text
-              style={
-                profile.is_online === "true"
-                  ? styles.onlineStatusText
-                  : styles.offlineStatusText
-              }
-            >
-              {profile.is_online === "true" ? "Online" : "Offline"}
+            <Text style={profile != null && profile.is_online === 'true' ? styles.onlineStatusText : styles.offlineStatusText}>
+              {profile != null && profile.is_online === 'true' ? 'Online' : 'Offline'}
             </Text>
           </View>
         </View>

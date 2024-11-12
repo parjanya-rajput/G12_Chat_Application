@@ -57,6 +57,12 @@ const HomeScreen = ({ navigation }) => {
                 textColor="#FFFFFF"
                 onPress={handleLogOut}
             />
+             <ReusableButton
+                text="CreatProfile"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('CreatProfileScreen')}
+            />
         </View>
     );
 };

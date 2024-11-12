@@ -4,8 +4,7 @@ import ReusableButton from '../components/atoms/ReusableButton';
 
 import { logout } from '../firebase/authService';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthStackNavigation from '../navigations/AuthStackNavigation';
-
+import BottomTabNavigation from '../navigations/BottomTabNavigation';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -21,13 +20,13 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
-        <View>
-            <ReusableButton
+        <View style={{padding:20}}>
+            {/* <ReusableButton
                 text="Open Drawer"
                 backgroundColor="#4CAF50"
                 textColor="#FFFFFF"
                 onPress={() => navigation.openDrawer()}
-            />
+            /> */}
             <ReusableButton
                 text="Go to Login"
                 backgroundColor="#4CAF50"

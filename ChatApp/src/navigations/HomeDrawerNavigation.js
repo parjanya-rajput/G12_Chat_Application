@@ -9,8 +9,8 @@ const HomeDrawerNavigation = () => {
     return (
         <Drawer.Navigator initialRouteName="HomeStack">
             <Drawer.Screen name="HomeStack" component={HomeScreen} options={{ title: 'Home' }} />
-            <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
-            {/* <Drawer.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} /> */}
+            {/* <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} /> */}
+            <Drawer.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
 
         </Drawer.Navigator>
     );

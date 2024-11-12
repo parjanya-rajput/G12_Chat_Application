@@ -6,10 +6,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F3F5",
   },
   header: {
-    paddingTop: 50,
+    paddingTop: 20,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#4A90E2",
+    // backgroundColor: "#4A90E2",
     padding: 10,
   },
   profilePic: {
@@ -28,12 +28,12 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontFamily: "Caros-Bold",
-    color: "white",
+    color: "black",
     fontSize: 18,
   },
   accountType: {
     fontFamily: "cretype-caros",
-    color: "#DDE6ED",
+    color: "black",
     fontSize: 14,
   },
   headerIcons: {
@@ -58,6 +58,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
+    marginVertical : 15,
+    alignItems : 'center', 
     fontFamily: "cretype-caros",
     flex: 1,
     backgroundColor: "#eaeaea",
@@ -70,11 +72,24 @@ const styles = StyleSheet.create({
   paperclipIcon: {
     marginHorizontal: 5,
   },
-  cameraButton: {
-    backgroundColor: "black",
+  autocompleteButton: {
     padding: 8,
-    margin: 5,
-    borderRadius: 32,
+    backgroundColor: '#ffffff',
+    borderRadius: 25,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
+    marginLeft: 2,
+    marginRight: 4,
+  },
+  cameraButton: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 25,
+    elevation: 2,
+    margin : 5,
   },
   micButton: {
     backgroundColor: "#4A90E2",
@@ -84,8 +99,15 @@ const styles = StyleSheet.create({
   emojiButton: {
     backgroundColor: "white",
     padding: 0,
-    margin: 2,
+    marginHorizontal: 1,
     borderRadius: 32,
+  },
+  sendButton: {
+    backgroundColor: 'white', // Green background for send button
+    padding: 10,
+    borderRadius: 25,
+    elevation: 2,
+    marginHorizontal: 1,
   },
 });
 

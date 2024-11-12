@@ -17,10 +17,17 @@ import ReusableButton from "../../atoms/ReusableButton";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
 
+import { useRoute } from '@react-navigation/native';
+
 const UpdateProfileScreen = () => {
-  const [name, setName] = useState("Jhon Abraham");
-  const [bio, setBio] = useState("My nickname is Dhruvin Akhaja");
-  const [phoneNumber, setPhoneNumber] = useState("(320) 555-0104");
+
+  const route = useRoute();
+  const { profile } = route.params; 
+
+
+  const [name, setName] = useState(profile.name);
+  const [bio, setBio] = useState(profile.bio);
+  const [phoneNumber, setPhoneNumber] = useState(profile.phone);
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
   );
@@ -73,7 +80,7 @@ const UpdateProfileScreen = () => {
           </TouchableOpacity>
           <TextInput
             style={styles.usernameInput}
-            value={name}
+            value={profile.name}
             onChangeText={setName}
             placeholder="Enter your name"
             placeholderTextColor="#888"

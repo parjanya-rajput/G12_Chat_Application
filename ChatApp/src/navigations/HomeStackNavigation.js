@@ -8,7 +8,7 @@ import ChatScreen from '../screens/ChatScreen';
 import HomeDrawerNavigation from './HomeDrawerNavigation';
 import LoginScreen from '../screens/LoginScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
-// import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 // import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
 
 
@@ -25,7 +25,7 @@ const HomeStackNavigation = () => {
             {/*//Remove the below line after development*/}
             <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
             <Stack.Screen name="OnBoardingScreen" component={OnBoardingScreen} options={{ headerShown: false }} />
-            {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} /> */}
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

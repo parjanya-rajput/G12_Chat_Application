@@ -4,8 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import AuthStackNavigation from './AuthStackNavigation';
 import HomeStackNavigation from './HomeStackNavigation';
 
+import BottomTabNavigation from './BottomTabNavigation';
+
 //Firebase checks
 import { onAuthStateChange } from '../firebase/authService';
+
 
 const RootNavigation = () => {
 

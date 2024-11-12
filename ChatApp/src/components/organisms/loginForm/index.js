@@ -1,9 +1,9 @@
 // LoginForm.js
-import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Text } from "@rneui/themed";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from 'react';
+import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
 
 // Import styles and reusable components
 import GlobalStyles from "../../globalStyles";
@@ -22,6 +22,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -31,16 +32,28 @@ const LoginForm = () => {
   const isFormValid = email && password;
 
   const handleSignIn = () => {
+    setIsLoading(true);
     signIn(email, password)
       .then((user) => {
         if (user) {
-          if (user.emailVerified) navigation.replace("Home");
-          else alert("Please verify your email address before signing in");
+          if (user.emailVerified) navigation.replace('Home');
+          else alert('Please verify your email address before signing in');
+        } else {
+          alert('User not found');
         }
+        setIsLoading(false);
       })
       .catch((error) => alert(error.message.toString()));
   };
 
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log in to Chatbox</Text>

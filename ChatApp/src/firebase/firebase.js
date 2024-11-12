@@ -1,11 +1,8 @@
-import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// import {...} from "firebase/database";
-// import {...} from "firebase/firestore";
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
+import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore } from "firebase/firestore";
+// import '@react-native-firebase/messaging';
 
 const apiKey = "API_KEY";
 
@@ -25,4 +22,6 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
+export const firestore = getFirestore(app);
+// export const messaging = firebase.messaging();
 export default app;

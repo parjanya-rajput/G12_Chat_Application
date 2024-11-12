@@ -1,5 +1,5 @@
 import { auth } from './firebase'; // Import the initialized auth instance
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, updateProfile, sendPasswordResetEmail } from 'firebase/auth';
 
 // Function to sign up a user
 export const signUp = (email, password, name) => {
@@ -41,6 +41,18 @@ export const logout = () => {
         })
         .catch((error) => {
             console.error('Error signing out:', error.message);
+            throw error;
+        });
+};
+
+// Function for Reset Password
+export const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email)
+        .then(() => {
+            console.log('Password reset email sent');
+        })
+        .catch((error) => {
+            console.error('Error sending password reset email:', error.message);
             throw error;
         });
 };

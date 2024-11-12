@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +25,7 @@ const SignUpForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false); // State for toggling confirm password visibility
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -33,15 +34,17 @@ const SignUpForm = () => {
 
   // Function to handle sign up
   const handleSignUp = () => {
+    setIsLoading(true);
     signUp(email, password, name)
       .then((user) => {
         if (user) {
           // Display a toast message
           alert(
             "Verification email sent to: " +
-              user.email +
-              ". Please verify your email to login."
+            user.email +
+            ". Please verify your email to login."
           );
+          setIsLoading(false);
           navigation.replace("Login"); // Navigate to Home after sign up
         }
       })
@@ -57,6 +60,14 @@ const SignUpForm = () => {
     confirmPassword &&
     password === confirmPassword;
 
+  if (isLoading) {
+    // Show a loading indicator while Firebase is checking the auth state
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up with email</Text>

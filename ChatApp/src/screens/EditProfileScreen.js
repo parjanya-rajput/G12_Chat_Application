@@ -1,15 +1,14 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
-import ReusableButton from "../components/atoms/ReusableButton";
-import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Text, View } from "react-native";
+import EditProfile from "../components/organisms/editProfile/index";
 
-const EditProfileScreen = () => {
-  const navigation = useNavigation();
+const EditProfileScreen = (props) => {
   return (
-    <View>
-      <Text>Edit Profile Screen</Text>
-    </View>
+    <>
+      <EditProfile navigation={props.navigation} />
+    </>
   );
 };
 
 export default EditProfileScreen;
+const styles = StyleSheet.create({});

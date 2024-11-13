@@ -69,7 +69,7 @@ const LoginForm = () => {
         keyboardType="email-address"
         autoCapitalize="none"
         leftIconName="email"
-        errorMessage={isEmailValid ? "" : "Invalid email format"}
+        errorMessage={!isEmailValid && email ? "Invalid email format" : ""}
       />
 
       {/* Password Input Field */}

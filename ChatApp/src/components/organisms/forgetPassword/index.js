@@ -56,7 +56,7 @@ const ForgotPasswordForm = () => {
         keyboardType="email-address" // Set keyboard type for email input
         autoCapitalize="none" // Disable auto-capitalization for email
         leftIconName="email" // Set the left icon to "email"
-        errorMessage={isEmailValid ? "" : "Invalid email format"} // Show error if email is invalid
+        errorMessage={!isEmailValid && email ? "Invalid email format" : ""} // Show error if email is invalid
         style={{ fontFamily: "cretype-caros" }}
       />
 

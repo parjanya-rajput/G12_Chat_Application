@@ -6,8 +6,6 @@ const GetAllUsers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
-
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);

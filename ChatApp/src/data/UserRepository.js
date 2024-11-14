@@ -1,4 +1,4 @@
-import { collection, getDocs , query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase';
 
 class UserRepository {
@@ -29,6 +29,24 @@ class UserRepository {
             return userData;
         } catch (error) {
             console.error("Error fetching user by user_name:", error);
+            throw error;
+        }
+    }
+
+    async getUserByUserId(userId) {
+        try {
+            const userDoc = await getDoc(doc(firestore, "users", userId));
+
+            if (!userDoc.exists()) {
+                console.log("No user found with userId:", userId);
+                return null;
+            }
+
+            const userData = userDoc.data();
+            console.log("UserRepo" + userData);
+            return { id: userDoc.id, ...userData };
+        } catch (error) {
+            console.error("Error fetching user by userId:", error);
             throw error;
         }
     }

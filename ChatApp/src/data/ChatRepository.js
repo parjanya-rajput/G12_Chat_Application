@@ -1,4 +1,4 @@
-import { query, orderBy, onSnapshot, setDoc, doc, updateDoc, addDoc, collection, serverTimestamp, getDocs } from 'firebase/firestore';
+import { query, orderBy, onSnapshot, where, setDoc, doc, updateDoc, addDoc, collection, serverTimestamp, getDocs } from 'firebase/firestore';
 import { auth, firestore } from '../firebase/firebase';
 
 class ChatRepository {
@@ -27,16 +27,6 @@ class ChatRepository {
         return docRef.id;
     }
 
-    // async loadMessages(conversationId) {
-    //     const messagesRef = collection(firestore, "conversation", conversationId, "messages");
-    //     const q = query(messagesRef, orderBy("timestamp", "asc"));
-    //     onSnapshot(q, (snapshot) => {
-    //         const msg = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    //         console.log(msg);
-    //     });
-    //     // console.log("ChatRepo: " + messages);
-    //     return messages;
-    // }
     async loadMessages(conversationId) {
         const messagesRef = collection(firestore, "conversation", conversationId, "messages");
         const q = query(messagesRef, orderBy("timestamp", "asc"));
@@ -46,6 +36,7 @@ class ChatRepository {
         return messages;
     }
 
+    // Send message function 
     async sendMessage(conversationId, senderId, content, messageType = "text") {
         const messageRef = collection(firestore, "conversation", conversationId, "messages");
 
@@ -62,6 +53,31 @@ class ChatRepository {
             last_message: content,
             last_message_timestamp: serverTimestamp(),
         });
+    }
+
+    async getPastConversations() {
+        const user = auth.currentUser;
+        if (!user) {
+            console.log("User not found, kindly login again!");
+            return;
+        }
+        try {
+            const conversationsRef = collection(firestore, "conversation");
+            const q = query(
+                conversationsRef,
+                where("participant_ids", "array-contains", user.uid),
+                orderBy("last_message_timestamp", "desc")
+            );
+            const querySnapshot = await getDocs(q);
+            const conversations = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // console.log("Repo:", JSON.stringify(conversations, null, 2));
+
+            return conversations;
+        } catch (error) {
+            console.error("Error fetching conversations:", error);
+            throw error;
+        }
     }
 }
 

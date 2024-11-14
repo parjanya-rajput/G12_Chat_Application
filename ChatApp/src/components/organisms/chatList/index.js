@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Animated, FlatList, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image, TextInput, RefreshControl } from 'react-native';
+import { Animated, FlatList, SafeAreaView, ActivityIndicator, Text, View, TouchableOpacity, Image, TextInput, RefreshControl, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ChatListItem from '../../molecules/ChatListItem';
 import GetAllUsers from '../../../domain/GetAllUsers'; // Import your Firebase fetch function 
+import { GetPastConversations } from '../../../domain/GetPastConversations';
 import styles from './style';
 
 
@@ -12,19 +13,14 @@ const ChatListScreen = (props) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     // const [profile, setProfile] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [conversation, setConversation] = useState(null);
     const [combinedData, setCombinedData] = useState([]); // To store combined Firebase and static data
     const scrollY = useRef(new Animated.Value(0)).current;
 
     const { users, loading, error } = GetAllUsers(); // Get users from Firebase
 
-    // Static data
-    const staticData = [
-        { id: '1', profileImage: 'https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg', username: 'Dhruvin Akhaja', status: 'See you soon' },
-        { id: '2', profileImage: 'https://st3.depositphotos.com/4071389/16855/i/450/depositphotos_168551948-stock-photo-happy-guy-in-grey-suit.jpg', username: 'Christopher Wells', status: 'Hello There!' },
-        // Additional static data entries...
-    ];
 
-    // Combine Firebase users with static data
+    // // Combine Firebase users with static data
     useEffect(() => {
         if (Array.isArray(users)) { // Ensure users is an array
             const firebaseData = users.map(user => ({
@@ -37,9 +33,37 @@ const ChatListScreen = (props) => {
                 email: user.email,
                 phone: user.phone,
             }));
-            setCombinedData([...staticData, ...firebaseData]);
+            setCombinedData([...firebaseData]);
         }
     }, [users]);
+
+    useEffect(() => {
+        const fetchConversations = async () => {
+            try {
+                const conv = await GetPastConversations.execute();
+                setConversation(conv);
+                console.log("Repo:", JSON.stringify(conv, null, 2));
+            } catch (error) {
+                console.error("Failed to fetch conversations:", error);
+            }
+        };
+
+        fetchConversations();
+    }, [conversation]);
+
+    if (loading) {
+        // Show a loading indicator while Firebase is checking the auth state
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
+    if (error) {
+        // Show alert box
+        Alert.alert(error)
+    }
 
     // const startChat = async (userId) => {
     //     const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
@@ -135,10 +159,11 @@ const ChatListScreen = (props) => {
 
             <View style={[styles.whiteBackgroundSection, isSearchActive && { flex: 1 }]}>
                 <Animated.FlatList
-                    data={filteredData}
+                    data={conversation}
                     renderItem={({ item }) => (
                         <ChatListItem
                             item={item}
+                            conversation={conversation}
                             onSwipeOpen={handleSwipeOpen}
                         />
                     )}

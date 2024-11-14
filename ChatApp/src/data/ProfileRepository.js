@@ -3,7 +3,7 @@ import { doc, updateDoc, addDoc, collection, setDoc, getDoc } from 'firebase/fir
 import { auth, firestore } from '../firebase/firebase';
 
 export class ProfileRepository {
-    static async addUserProfile({ name, bio, phone, profilePic }) {
+    static async addUserProfile({ name, bio, phone, profilePic, isOnline }) {
         const user = auth.currentUser;
         if (!user) {
             throw new Error('No user is logged in.');
@@ -16,8 +16,8 @@ export class ProfileRepository {
             email: user.email,
             bio: bio || "I am using SpringTalk!",
             phone: phone,
-            profile_pic: profilePic || "null",
-            is_online: true,
+            profile_pic: profilePic || "https://www.google.com/imgres?q=profile%20image%20default&imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fthumbnails%2F020%2F765%2F399%2Fsmall_2x%2Fdefault-profile-account-unknown-icon-black-silhouette-free-vector.jpg&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Ffree-vector%2Fdefault-profile-picture&docid=--oA6_9U9ufzsM&tbnid=bowkO_GA3uhk3M&vet=12ahUKEwiznKbaj9mJAxVEr1YBHRbSPAMQM3oECGEQAA..i&w=400&h=400&hcb=2&ved=2ahUKEwiznKbaj9mJAxVEr1YBHRbSPAMQM3oECGEQAA",
+            is_online: isOnline,
         });
         console.log("Document written with ID: ", docRef);
     }
@@ -34,7 +34,7 @@ export class ProfileRepository {
             name: name,
             bio: bio,
             phone: phone,
-            profile_pic: profilePic || "null",
+            profile_pic: profilePic || "https://www.google.com/imgres?q=profile%20image%20default&imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fthumbnails%2F020%2F765%2F399%2Fsmall_2x%2Fdefault-profile-account-unknown-icon-black-silhouette-free-vector.jpg&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Ffree-vector%2Fdefault-profile-picture&docid=--oA6_9U9ufzsM&tbnid=bowkO_GA3uhk3M&vet=12ahUKEwiznKbaj9mJAxVEr1YBHRbSPAMQM3oECGEQAA..i&w=400&h=400&hcb=2&ved=2ahUKEwiznKbaj9mJAxVEr1YBHRbSPAMQM3oECGEQAA",
             is_online: isOnline,
         });
     }

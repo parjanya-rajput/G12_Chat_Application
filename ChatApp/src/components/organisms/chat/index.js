@@ -1,12 +1,57 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, FlatList, StyleSheet } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
 // import Feather from 'react-native-vector-icons/Feather';
 
-const Chat = ({ route, navigation }) => {
-    const { username, profileImage } = route.params;
+import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+
+import { useState } from 'react';
+
+import { LoadMessages } from '../../../domain/LoadMessage';
+import { auth } from '../../../firebase/firebase';
+
+const Chat = () => {
+
+    const navigation = useNavigation();
+    const route = useRoute();
+    const { item, conversationId } = route.params;
+    const [messages, setMessages] = useState([]);
+    const [text, setText] = useState("");
+    const flatListRef = useRef(null);
+
+    const sendMessage = () => {
+        //Implement send message feature
+        alert("Message sent!")
+    };
+
+    // useEffect(() => {
+    //     const fetchMessages = async () => {
+    //         const fetchedMessages = await LoadMessages.execute(conversationId);
+    //         setMessages(fetchedMessages);
+    //     };
+    //     fetchMessages();
+    //     console.log(messages);
+    // }, [conversationId, text]);
+
+    useEffect(() => {
+        // Fetch messages from your data source and update the state
+        const fetchMessages = async () => {
+            // Replace this with your actual data fetching logic
+            const fetchedMessages = await LoadMessages.execute(conversationId);
+            setMessages(fetchedMessages);
+        };
+
+        fetchMessages();
+    }, [conversationId, text]);
+
+    useEffect(() => {
+        if (flatListRef.current && messages.length > 0) {
+            flatListRef.current.scrollToEnd({ animated: true });
+        }
+    }, [messages]);
 
     return (
         <View style={styles.container}>
@@ -20,13 +65,13 @@ const Chat = ({ route, navigation }) => {
                 <TouchableOpacity
                     onPress={() =>
                         navigation.navigate('ProfilePicView', {
-                            dpImage: profileImage,
-                            groupName: username,
+                            dpImage: item.profileImage,
+                            groupName: item.name,
                         })
                     }
                 >
                     <Image
-                        source={{ uri: profileImage }}
+                        source={{ uri: item.profileImage }}
                         style={styles.profilePic}
                     />
                 </TouchableOpacity>
@@ -36,13 +81,13 @@ const Chat = ({ route, navigation }) => {
                     style={styles.headerContent}
                     onPress={() =>
                         navigation.navigate('Profile', {
-                            Image: profileImage,
-                            name: username,
+                            Image: item.profileImage,
+                            name: item.name,
                         })
                     }
                 >
                     <View style={styles.headerText}>
-                        <Text style={styles.profileName}>{username}</Text>
+                        <Text style={styles.profileName}>{item.name}</Text>
                         <Text style={styles.accountType}>Business Account</Text>
                     </View>
                 </TouchableOpacity>
@@ -61,6 +106,30 @@ const Chat = ({ route, navigation }) => {
 
             </View>
 
+            {/* Messages */}
+            <View style={styles.container}>
+                <FlatList
+                    ref={flatListRef}
+                    data={messages}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View
+                            style={[
+                                styles.messageContainer,
+                                item.sender_id === auth.currentUser.uid ? styles.sentMessage : styles.receivedMessage,
+                            ]}
+                        >
+                            <Text style={styles.messageText}>{item.text}</Text>
+                            <Text style={styles.timestamp}>
+                                {item.timestamp?.seconds
+                                    ? new Date(item.timestamp.seconds * 1000).toLocaleTimeString()
+                                    : ''}
+                            </Text>
+                        </View>
+                    )}
+                />
+            </View>
+
             {/* Message Input */}
             <View style={styles.inputContainer}>
                 <TouchableOpacity style={styles.autocompleteButton}>
@@ -69,13 +138,18 @@ const Chat = ({ route, navigation }) => {
                 <TextInput
                     style={styles.input}
                     placeholder="Message"
+                    value={text}
+                    onChangeText={setText}
                     placeholderTextColor="black"
                 />
 
-                <TouchableOpacity style={styles.sendButton}>
+                <TouchableOpacity
+                    style={styles.sendButton}
+                    onPress={sendMessage}
+                >
                     <Ionicons name="send" size={20} color="#4CAF50" style={{ transform: [{ rotate: '-30deg' }] }} />
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity style={styles.cameraButton}>
                     <FontAwesome name="camera" size={20} color="black" style={styles.cameraIcon} />
                 </TouchableOpacity>

@@ -119,7 +119,7 @@ const ProfileView = () => {
       >
         <View style={styles.profile}>
           <Image
-            source={{ uri: "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg" }}
+            source={{ uri: profile.profile_pic }}
             style={styles.profileImage}
           />
           <Text style={styles.username}>{profile.name}</Text>

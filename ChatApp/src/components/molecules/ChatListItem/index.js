@@ -4,9 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { auth } from '../../../firebase/firebase';
+import { GetOrCreateConversation } from '../../../domain/GetOrCreateConversation';
 import styles from './style';
-
-const ChatListItem = ({ profileImage, username, status, onSwipeOpen }) => {
+const ChatListItem = ({ item, onSwipeOpen }) => {
     const navigation = useNavigation();
     const swipeableRef = useRef(null);
 
@@ -31,6 +32,17 @@ const ChatListItem = ({ profileImage, username, status, onSwipeOpen }) => {
         </View>
     );
 
+    const startChat = async (userId) => {
+        const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
+        if (!currentUserId) { // Check if user is logged in
+            alert("You need to be logged in to chat");
+            return;
+        }
+        const conversationId = await GetOrCreateConversation.execute(currentUserId, userId);
+        console.log(conversationId);
+        navigation.navigate("Chat", { item: item, conversationId: conversationId });
+    };
+
     return (
         <Swipeable
             ref={swipeableRef}
@@ -42,22 +54,22 @@ const ChatListItem = ({ profileImage, username, status, onSwipeOpen }) => {
                 {/* Profile Image with black background */}
                 <TouchableOpacity
                     onPress={() => navigation.navigate('ProfilePicView', {
-                        dpImage: profileImage,
-                        groupName: username,
+                        dpImage: item.profileImage,
+                        groupName: item.username,
                     })}
                 >
                     <View style={styles.imageWrapper}>
-                        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                        <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
                     </View>
                 </TouchableOpacity>
 
                 {/* User Info */}
                 <TouchableOpacity
                     style={styles.textContainer}
-                    onPress={() => navigation.navigate('Chat', { username, profileImage })}
+                    onPress={() => startChat(item.id)}
                 >
-                    <Text style={styles.username}>{username}</Text>
-                    <Text style={styles.status}>{status}</Text>
+                    <Text style={styles.username}>{item.name}</Text>
+                    <Text style={styles.status}>{item.bio}</Text>
                 </TouchableOpacity>
             </View>
         </Swipeable>

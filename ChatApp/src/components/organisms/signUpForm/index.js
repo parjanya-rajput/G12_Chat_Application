@@ -26,6 +26,7 @@ const SignUpForm = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false); // State for toggling confirm password visibility
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
 
   const handleEmailChange = (input) => {
     setIsEmailValid(validateEmail(input));
@@ -38,6 +39,7 @@ const SignUpForm = () => {
     signUp(email, password, name)
       .then((user) => {
         if (user) {
+          setUser(user);
           // Display a toast message
           alert(
             "Verification email sent to: " +
@@ -45,11 +47,21 @@ const SignUpForm = () => {
             ". Please verify your email to login."
           );
           setIsLoading(false);
-          navigation.replace("CreateProfileScreen"); // Navigate to Home after sign up
+          navigation.replace("CreateProfileScreen", {
+            user: user,
+          }); // Navigate to Home after sign up
         }
       })
       .catch((error) => alert(error.message));
   };
+
+  //Used for debugging
+  // const handleSignUp = () => {
+  //   navigation.navigate("CreateProfileScreen", {
+  //     initialEmail: email,
+  //     initialName: name,
+  //   });
+  // };
 
   const isButtonEnabled =
     isEmailValid && password.length >= 8 && password === confirmPassword;

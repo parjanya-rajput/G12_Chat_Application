@@ -1,13 +1,13 @@
 import { ProfileRepository } from "../data/ProfileRepository";
 
 export class ProfileCreate {
-    static async execute({ name, bio, phone, profilePic }) {
+    static async execute({ name, bio, phone, profilePic, isOnline }) {
         if (!phone) {
             throw new Error('Phone number must be filled');
         }
 
         // Use the repository to update the profile
-        await ProfileRepository.addUserProfile({ name, bio, phone, profilePic });
+        await ProfileRepository.addUserProfile({ name, bio, phone, profilePic, isOnline });
     }
 }
 

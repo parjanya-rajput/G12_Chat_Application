@@ -20,7 +20,7 @@ const Stack = createStackNavigator();
 
 const AuthStackNavigation = () => {
     return (
-        <Stack.Navigator initialRouteName="OnBoardingScreen">
+        <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
                 name="OnBoardingScreen"
                 component={OnBoardingScreen}

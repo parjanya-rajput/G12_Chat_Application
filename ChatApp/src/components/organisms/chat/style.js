@@ -1,15 +1,17 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  // Chat container
   container: {
     flex: 1,
     backgroundColor: "#F2F3F5",
   },
+
+  // Header section
   header: {
     paddingTop: 20,
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "#4A90E2",
     padding: 10,
   },
   profilePic: {
@@ -48,6 +50,34 @@ const styles = StyleSheet.create({
   moreoptButton: {
     marginHorizontal: 5,
   },
+
+  // Message display styles
+  messageContainer: {
+    maxWidth: '80%',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 5,
+  },
+  sentMessage: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#DCF8C6', // Light green for sent messages
+  },
+  receivedMessage: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#ECECEC', // Light grey for received messages
+  },
+  messageText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 5,
+    alignSelf: 'flex-end',
+  },
+
+  // Input section
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -58,8 +88,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    marginVertical : 15,
-    alignItems : 'center', 
+    marginVertical: 15,
+    alignItems: 'center',
     fontFamily: "cretype-caros",
     flex: 1,
     backgroundColor: "#eaeaea",
@@ -89,7 +119,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 25,
     elevation: 2,
-    margin : 5,
+    margin: 5,
   },
   micButton: {
     backgroundColor: "#4A90E2",

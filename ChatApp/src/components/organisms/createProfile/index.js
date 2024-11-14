@@ -20,14 +20,18 @@ import styles from "./style";
 
 import { ProfileCreate } from "../../../domain/Profile";
 
+import { useRoute } from "@react-navigation/native";
+
 const CreateProfile = () => {
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("My nickname is Dhruvin Akhaja");
-  const [phone, setPhone] = useState("(320) 555-0104");
-  const [email, setEmail] = useState("jhon.abraham@example.com"); // Static email
-  const [profilePic, setProfilePic] = useState(
-    "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
-  );
+
+  const route = useRoute();
+  const { user } = route.params;
+
+  const [name, setName] = useState(user.displayName);
+  const [bio, setBio] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState(user.email); // Static email
+  const [profilePic, setProfilePic] = useState("https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg");
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,7 +62,20 @@ const CreateProfile = () => {
 
   const handleCreateProfile = async () => {
     setIsLoading(true);
+
     try {
+      if (!name || !bio || !phone) {
+        alert("Please fill all the fields.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Check if user is verified before procedding to create profile
+      // if (!user.emailVerified) {
+      //   alert("Please verify your email address before creating a profile.");
+      //   setIsLoading(false);
+      //   return;
+      // }
       await ProfileCreate.execute({
         name,
         bio,
@@ -126,7 +143,7 @@ const CreateProfile = () => {
             placeholderTextColor="#888"
           />
           <Text style={styles.userHandle}>
-            @{name.toLowerCase().replace(" ", "")}
+            {email}
           </Text>
 
           <View style={styles.statusContainer}>

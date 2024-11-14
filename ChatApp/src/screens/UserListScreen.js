@@ -15,13 +15,6 @@ const UserListScreen = () => {
         console.log(userDetails);
     };
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.itemContainer} onPress={() => handleUserPress(item.user_name)}>
-            <Text style={styles.userName}>{item.name}</Text>
-            <Text style={styles.userHandle}>{item.user_name}</Text>
-        </TouchableOpacity>
-    );
-
     const renderItem2 = ({ item }) => {
         // Check if the name or user_name starts with the search query
         if (

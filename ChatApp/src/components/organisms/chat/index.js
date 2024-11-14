@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 
+import { SendMessage } from '../../../domain/SendMessage';
 import { useState } from 'react';
 
 import { LoadMessages } from '../../../domain/LoadMessage';
@@ -23,8 +24,9 @@ const Chat = () => {
     const flatListRef = useRef(null);
 
     const sendMessage = () => {
-        //Implement send message feature
-        alert("Message sent!")
+        console.log(conversationId, item.id, text)
+        SendMessage.execute(conversationId, item.id, text, "text");
+        setText("");
     };
 
     // useEffect(() => {

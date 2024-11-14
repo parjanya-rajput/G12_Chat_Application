@@ -46,6 +46,23 @@ class ChatRepository {
         return messages;
     }
 
+    async sendMessage(conversationId, senderId, content, messageType = "text") {
+        const messageRef = collection(firestore, "conversation", conversationId, "messages");
+
+        const msg = await addDoc(collection(firestore, "conversation", conversationId, "messages"), {
+            sender_id: auth.currentUser.uid,
+            recv_id: senderId,
+            text: content,
+            timestamp: serverTimestamp(),
+            type: messageType,
+            msg_status: "sent",
+        });
+
+        await updateDoc(doc(firestore, "conversation", conversationId), {
+            last_message: content,
+            last_message_timestamp: serverTimestamp(),
+        });
+    }
 }
 
 export default new ChatRepository();

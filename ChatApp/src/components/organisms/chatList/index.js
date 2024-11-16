@@ -2,56 +2,106 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Animated, FlatList, SafeAreaView, ActivityIndicator, Text, View, TouchableOpacity, Image, TextInput, RefreshControl, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ChatListItem from '../../molecules/ChatListItem';
-import GetAllUsers from '../../../domain/GetAllUsers'; // Import your Firebase fetch function 
-import { GetPastConversations } from '../../../domain/GetPastConversations';
+// import GetAllUsers from '../../../domain/GetAllUsers'; // Import your Firebase fetch function 
+import GetPastConversations from '../../../domain/GetPastConversations';
+import { ChatRepository } from '../../../data/ChatRepository';
 import styles from './style';
 
 
 const ChatListScreen = (props) => {
     const [openSwipeRef, setOpenSwipeRef] = useState(null);
     const [isSearchActive, setIsSearchActive] = useState(false);
-    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     // const [profile, setProfile] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [conversation, setConversation] = useState(null);
     const [combinedData, setCombinedData] = useState([]); // To store combined Firebase and static data
     const scrollY = useRef(new Animated.Value(0)).current;
 
-    const { users, loading, error } = GetAllUsers(); // Get users from Firebase
+    // const { users, loading, error } = GetAllUsers(); // Get users from Firebase
 
+    const chatRepository = new ChatRepository();
+    const getPastConversations = new GetPastConversations(chatRepository);
 
     // // Combine Firebase users with static data
-    useEffect(() => {
-        if (Array.isArray(users)) { // Ensure users is an array
-            const firebaseData = users.map(user => ({
-                id: user.id,
-                profileImage: user.profile_pic || 'https://via.placeholder.com/150',
-                userName: user.user_name,
-                bio: user.bio || 'Hello!',
-                isOnline: user.isOnline,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-            }));
-            setCombinedData([...firebaseData]);
-        }
-    }, [users]);
+    // useEffect(() => {
+    //     if (Array.isArray(users)) { // Ensure users is an array
+    //         const firebaseData = users.map(user => ({
+    //             id: user.id,
+    //             profileImage: user.profile_pic || 'https://via.placeholder.com/150',
+    //             userName: user.user_name,
+    //             bio: user.bio || 'Hello!',
+    //             isOnline: user.isOnline,
+    //             name: user.name,
+    //             email: user.email,
+    //             phone: user.phone,
+    //         }));
+    //         setCombinedData([...firebaseData]);
+    //     }
+    // }, [users]);
+
+    //Bug of infinite refresh
+    // useEffect(() => {
+    //     const fetchConversations = async () => {
+    //         try {
+    //             const conv = await GetPastConversations.execute();
+    //             setConversation(conv);
+    //             console.log("Repo:", JSON.stringify(conv, null, 2));
+    //         } catch (error) {
+    //             console.error("Failed to fetch conversations:", error);
+    //         }
+    //     };
+
+    //     fetchConversations();
+    // }, [conversation]);
+
+    // useEffect(() => {
+    //     const handleChatsUpdate = (conversations) => {
+    //         setConversation(conversations);
+    //         setIsLoading(false);
+    //     };
+
+    //     // Fetch conversations and set up real-time listener
+    //     getPastConversations.execute(handleChatsUpdate);
+
+    //     return () => {
+    //         // Optionally, handle cleanup here if necessary
+    //     };
+    // }, []);
 
     useEffect(() => {
-        const fetchConversations = async () => {
-            try {
-                const conv = await GetPastConversations.execute();
-                setConversation(conv);
-                console.log("Repo:", JSON.stringify(conv, null, 2));
-            } catch (error) {
-                console.error("Failed to fetch conversations:", error);
-            }
+        let unsubscribe = null;
+
+        const fetchChats = () => {
+            const handleChatsUpdate = (conversations) => {
+                setConversation(conversations);
+                setIsLoading(false);
+            };
+
+            // Fetch conversations and set up the Firestore snapshot listener
+            unsubscribe = getPastConversations.execute(handleChatsUpdate);
         };
 
-        fetchConversations();
-    }, [conversation]);
+        fetchChats();
 
-    if (loading) {
+        // Cleanup function to unsubscribe from Firestore listener
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        };
+    }, []);
+
+    // if (loading) {
+    //     // Show a loading indicator while Firebase is checking the auth state
+    //     return (
+    //         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    //             <ActivityIndicator size="large" color="#0000ff" />
+    //         </View>
+    //     );
+    // }
+
+    if (isLoading) {
         // Show a loading indicator while Firebase is checking the auth state
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -60,10 +110,10 @@ const ChatListScreen = (props) => {
         );
     }
 
-    if (error) {
-        // Show alert box
-        Alert.alert(error)
-    }
+    // if (error) {
+    //     // Show alert box
+    //     Alert.alert(error)
+    // }
 
     // const startChat = async (userId) => {
     //     const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
@@ -94,11 +144,13 @@ const ChatListScreen = (props) => {
         extrapolate: 'clamp',
     });
 
+    // No need for manual refresh
     const handleRefresh = () => {
-        setIsRefreshing(true);
+
+        setIsLoading(true);
         // Simulate fetching new data with a timeout
         setTimeout(() => {
-            setIsRefreshing(false);
+            setIsLoading(false);
         }, 1000);
     };
 
@@ -174,7 +226,7 @@ const ChatListScreen = (props) => {
                         { useNativeDriver: false }
                     )}
                     refreshControl={
-                        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+                        <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
                     }
                 />
             </View>

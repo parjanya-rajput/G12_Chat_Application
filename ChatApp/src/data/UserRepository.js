@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase';
 
 class UserRepository {
@@ -33,6 +33,24 @@ class UserRepository {
         }
     }
 
+    // async getUserByUserId(userId) {
+    //     try {
+    //         const userDoc = await getDoc(doc(firestore, "users", userId));
+
+    //         if (!userDoc.exists()) {
+    //             console.log("No user found with userId:", userId);
+    //             return null;
+    //         }
+
+    //         const userData = userDoc.data();
+    //         console.log("UserRepo" + userData);
+    //         return { id: userDoc.id, ...userData };
+    //     } catch (error) {
+    //         console.error("Error fetching user by userId:", error);
+    //         throw error;
+    //     }
+    // }
+
     async getUserByUserId(userId) {
         try {
             const userDoc = await getDoc(doc(firestore, "users", userId));
@@ -49,6 +67,18 @@ class UserRepository {
             console.error("Error fetching user by userId:", error);
             throw error;
         }
+    }
+
+    // Listen to user data changes for real-time updates
+    listenToUserUpdates(userId, callback) {
+        const userRef = doc(firestore, "users", userId);
+        return onSnapshot(userRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                callback({ id: docSnapshot.id, ...docSnapshot.data() });
+            } else {
+                callback(null);
+            }
+        });
     }
 }
 

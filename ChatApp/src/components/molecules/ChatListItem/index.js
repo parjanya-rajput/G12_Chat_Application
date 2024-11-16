@@ -33,12 +33,37 @@ const ChatListItem = ({ item, onSwipeOpen }) => {
     //     // console.log("ChatList" + senderProfile)
     // }, [senderId]);
 
+    // useEffect(() => {
+    //     const fetchSenderProfile = async () => {
+    //         try {
+    //             if (senderId) {
+    //                 const userProfile = await GetUserByUserId.execute(senderId);
+    //                 setSenderProfile(userProfile);
+    //             }
+    //         } catch (error) {
+    //             console.error("Failed to fetch sender profile:", error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+
+    //     fetchSenderProfile();
+    // }, [senderId]);
+
     useEffect(() => {
         const fetchSenderProfile = async () => {
             try {
                 if (senderId) {
+                    // Fetch user profile initially
                     const userProfile = await GetUserByUserId.execute(senderId);
                     setSenderProfile(userProfile);
+
+                    // Set up real-time listener for user profile updates
+                    GetUserByUserId.listenToUserUpdates(senderId, (updatedProfile) => {
+                        if (updatedProfile) {
+                            setSenderProfile(updatedProfile);
+                        }
+                    });
                 }
             } catch (error) {
                 console.error("Failed to fetch sender profile:", error);
@@ -48,6 +73,12 @@ const ChatListItem = ({ item, onSwipeOpen }) => {
         };
 
         fetchSenderProfile();
+
+        // Cleanup on component unmount
+        return () => {
+            setSenderProfile(null);
+            setIsLoading(true);
+        };
     }, [senderId]);
 
     // Right-side actions (Delete and Mute Notification)

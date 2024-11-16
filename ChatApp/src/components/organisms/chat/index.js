@@ -11,7 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { SendMessage } from '../../../domain/SendMessage';
 import { useState } from 'react';
 
-import { LoadMessages } from '../../../domain/LoadMessage';
+import { ChatRepository } from '../../../data/ChatRepository';
+import LoadMessages from '../../../domain/LoadMessage';
 import { auth } from '../../../firebase/firebase';
 
 const Chat = () => {
@@ -23,11 +24,27 @@ const Chat = () => {
     const [text, setText] = useState("");
     const flatListRef = useRef(null);
 
+    const chatRepository = new ChatRepository();
+    // const sendMessageUse = new SendMessage(chatRepository);
+    const loadMessagesUse = new LoadMessages(chatRepository);
+
     const sendMessage = () => {
+        if (!text.trim()) return;
         console.log(conversationId, item.id, text)
         SendMessage.execute(conversationId, item.id, text, "text");
         setText("");
     };
+
+    // const handleSendMessage = async () => {
+    //     if (!text.trim()) return; // Prevent sending empty messages
+
+    //     try {
+    //         await SendMessage.execute(conversationId, item.id, text, "text");
+    //         setText(""); // Clear the input field after sending
+    //     } catch (error) {
+    //         console.error("Failed to send message:", error);
+    //     }
+    // };
 
     // useEffect(() => {
     //     const fetchMessages = async () => {
@@ -39,15 +56,25 @@ const Chat = () => {
     // }, [conversationId, text]);
 
     useEffect(() => {
-        // Fetch messages from your data source and update the state
-        const fetchMessages = async () => {
-            // Replace this with your actual data fetching logic
-            const fetchedMessages = await LoadMessages.execute(conversationId);
-            setMessages(fetchedMessages);
-        };
+        // Load messages and listen for updates
+        const unsubscribe = loadMessagesUse.execute(conversationId, setMessages);
 
-        fetchMessages();
-    }, [conversationId, text]);
+        // Cleanup the subscription when the component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, [conversationId]);
+
+    // useEffect(() => {
+    //     // Fetch messages from your data source and update the state
+    //     const fetchMessages = async () => {
+    //         // Replace this with your actual data fetching logic
+    //         const fetchedMessages = await LoadMessages.execute(conversationId);
+    //         setMessages(fetchedMessages);
+    //     };
+
+    //     fetchMessages();
+    // }, [conversationId, text]);
 
     useEffect(() => {
         if (flatListRef.current && messages.length > 0) {

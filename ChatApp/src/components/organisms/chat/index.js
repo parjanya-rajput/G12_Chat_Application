@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, TextInput, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import styles from './style';
 import { Ionicons } from '@expo/vector-icons';
+import MessageBubble from '../../atoms/MessageBubble/Index';
 // import Feather from 'react-native-vector-icons/Feather';
 
 import { useRoute } from '@react-navigation/native';
@@ -23,6 +24,8 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const flatListRef = useRef(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showSearchBar, setShowSearchBar] = useState(false);
 
     const chatRepository = new ChatRepository();
     // const sendMessageUse = new SendMessage(chatRepository);
@@ -34,6 +37,20 @@ const Chat = () => {
         SendMessage.execute(conversationId, item.id, text, "text");
         setText("");
     };
+
+    const handleSearchButtonClick = () => {
+        setShowSearchBar(!showSearchBar);
+        // Reset searchQuery when closing the search bar
+        if (!showSearchBar) {
+            setSearchQuery('');
+        }
+    }
+
+    const filteredMessages = searchQuery.trim() // Only filter if searchQuery is not empty
+    ? messages.filter((message) =>
+        message.text.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : messages;
 
     // const handleSendMessage = async () => {
     //     if (!text.trim()) return; // Prevent sending empty messages
@@ -82,6 +99,16 @@ const Chat = () => {
         }
     }, [messages]);
 
+    const renderMessage = ({ item }) => (
+        <MessageBubble
+        message={item.text} 
+        isOutgoing={item.sender_id === auth.currentUser.uid}
+        timestamp={item.timestamp}
+        status={item.msg_status}
+        searchQuery={searchQuery}
+        /> // Pass the search query to the MessageBubble 
+    );
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -122,21 +149,21 @@ const Chat = () => {
                 </TouchableOpacity>
 
                 <View style={styles.headerIcons}>
-                    <TouchableOpacity style={styles.videocallButton}>
-                        <FontAwesome name="video-camera" size={23} color="#4A90E2" />
+                    <TouchableOpacity style={styles.searchButton} onPress={handleSearchButtonClick}>
+                        <FontAwesome name="search" size={23} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.audiocallButton}>
-                        <FontAwesome name="phone" size={23} color="#4A90E2" />
+                        <FontAwesome name="phone" size={23} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.moreoptButton}>
-                        <MaterialIcons name="more-vert" size={23} color="#4A90E2" />
+                        <MaterialIcons name="more-vert" size={23} color="black" />
                     </TouchableOpacity>
                 </View>
 
             </View>
 
             {/* Messages */}
-            <View style={styles.container}>
+            {/* <View style={styles.container}>
                 <FlatList
                     ref={flatListRef}
                     data={messages}
@@ -157,7 +184,27 @@ const Chat = () => {
                         </View>
                     )}
                 />
-            </View>
+            </View> */}
+
+            {/* Messages List */}
+            {showSearchBar && (
+            <TextInput
+                style={styles.searchBar}
+                placeholder="Search messages..."
+                onChangeText={(text) => setSearchQuery(text)}
+                value={searchQuery}/>
+            )}
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+            style={{ flex: 1 }}>
+            <FlatList
+                ref={flatListRef}
+                data={filteredMessages}
+                renderItem={renderMessage}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{ paddingBottom: 90 }}/>
+            {/* Your message input section */}
+        </KeyboardAvoidingView>
 
             {/* Message Input */}
             <View style={styles.inputContainer}>

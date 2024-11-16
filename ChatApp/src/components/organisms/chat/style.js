@@ -41,8 +41,17 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: "row",
   },
-  videocallButton: {
-    marginHorizontal: 12,
+  searchButton: {
+    marginHorizontal: 12, 
+  },
+  searchBar: {
+    padding: 10,
+    margin: 10,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: '#f2f2f2',
+    paddingLeft: 40, // Add padding for the search icon
   },
   audiocallButton: {
     marginHorizontal: 5,

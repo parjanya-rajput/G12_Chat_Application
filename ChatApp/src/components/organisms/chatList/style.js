@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import GlobalStyles from "../../globalStyles";
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -9,7 +10,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     paddingVertical: 15,
     paddingHorizontal: 20,
-    // marginTop: 30,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -64,6 +65,25 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#fff',
   },
+
+
+
+  floatingButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: GlobalStyles.SIGNIN1_BUTTON_COLOR, // Change to your preferred color
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5, // Shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+},
 });
 
 export default styles;

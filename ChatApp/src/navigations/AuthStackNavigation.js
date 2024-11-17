@@ -14,6 +14,7 @@ import BottomTabNavigation from "./BottomTabNavigation";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import UserListScreen from "../screens/UserListScreen";
 import CreateProfileScreen from "../screens/CreateProfileScreen"
+import AllUserScreen from "../screens/AllUserListScreen";
 // import HomeScreen from '../screens/HomeScreen';
 import GroupListScreen from "../screens/GroupListScreen";
 import CreateGroup from "../screens/CreateGroup";
@@ -70,6 +71,11 @@ const AuthStackNavigation = () => {
             <Stack.Screen
                 name="CreateProfileScreen"
                 component={CreateProfileScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="AllUserScreen"
+                component={AllUserScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen

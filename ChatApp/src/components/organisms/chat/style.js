@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
   // Header section
   header: {
     paddingTop: 20,
+    marginTop : 20,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,

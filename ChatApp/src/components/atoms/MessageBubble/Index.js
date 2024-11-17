@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import styles from './Styles';
+import styles from './styles';
 
 const MessageBubble = ({ message, isOutgoing,timestamp, status, searchQuery }) => {
 
@@ -23,7 +23,7 @@ const MessageBubble = ({ message, isOutgoing,timestamp, status, searchQuery }) =
   });
 
   return (
-    <View style={[styles.bubble, isOutgoing ? styles.outgoingBubble : styles.incomingBubble]}>
+    <View style={isOutgoing ? styles.outgoingBubble : styles.incomingBubble}>
      <Text style={styles.messageText}>
         {highlightedMessage}
       </Text>

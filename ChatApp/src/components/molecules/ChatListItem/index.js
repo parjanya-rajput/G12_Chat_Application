@@ -9,7 +9,11 @@ import { GetOrCreateConversation } from '../../../domain/GetOrCreateConversation
 import styles from './style';
 import { GetUserByUserId } from '../../../domain/GetUserByUserId';
 
-const ChatListItem = ({ item, onSwipeOpen }) => {
+import { firestore } from '../../../firebase/firebase'; // Import the firestore object correctly
+import { getDoc, doc, deleteDoc, collection, getDocs, query } from 'firebase/firestore';
+
+
+const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     const navigation = useNavigation();
     const swipeableRef = useRef(null);
     const [senderProfile, setSenderProfile] = useState(null);
@@ -81,10 +85,94 @@ const ChatListItem = ({ item, onSwipeOpen }) => {
         };
     }, [senderId]);
 
+
+    // const handleDeleteConversation = (db, conversationId, callback) => {
+    //     // Reference the specific conversation document
+    //     const conversationRef = doc(db, "conversation", conversationId);
+    
+    //     // Set up a real-time listener to ensure the conversation exists before deletion
+    //     const unsubscribe = onSnapshot(
+    //         conversationRef,
+    //         (docSnapshot) => {
+    //             if (docSnapshot.exists()) {
+    //                 // Conversation exists, proceed to delete
+    //                 deleteDoc(conversationRef)
+    //                     .then(() => {
+    //                         console.log(`Conversation ${conversationId} deleted successfully.`);
+    //                         if (callback) callback(null, conversationId); // Invoke callback on success
+    //                     })
+    //                     .catch((error) => {
+    //                         console.error("Error deleting conversation:", error);
+    //                         if (callback) callback(error, null); // Invoke callback on error
+    //                     })
+    //                     .finally(() => {
+    //                         unsubscribe(); // Unsubscribe after deletion
+    //                     });
+    //             } else {
+    //                 console.log(`Conversation ${conversationId} does not exist.`);
+    //                 if (callback) callback(new Error("Conversation not found"), null);
+    //                 unsubscribe(); // Unsubscribe if no document is found
+    //             }
+    //         },
+    //         (error) => {
+    //             console.error("Error listening to conversation:", error);
+    //             if (callback) callback(error, null); // Invoke callback on listener error
+    //         }
+    //     );
+    
+    //     // Return unsubscribe function to allow manual cleanup
+    //     return unsubscribe;
+    // };
+
+    const handleDeleteConversation = async (conversationId) => {
+        try {
+            if (!conversationId) {
+                console.error("Conversation ID is invalid");
+                return;
+            }
+    
+            // Reference to the conversation document
+            const conversationRef = doc(firestore, 'conversation', conversationId);
+    
+            // Check if the conversation exists
+            const conversationDoc = await getDoc(conversationRef);
+            if (!conversationDoc.exists()) {
+                console.error("Conversation not found.");
+                return;
+            }
+    
+            // Reference to the messages sub-collection under the conversation
+            const messagesRef = collection(conversationRef, 'messages');
+            const messagesSnapshot = await getDocs(messagesRef);
+    
+            if (!messagesSnapshot.empty) {
+                const deleteMessagesPromises = messagesSnapshot.docs.map(doc => deleteDoc(doc.ref));
+                // Wait for all messages to be deleted
+                await Promise.all(deleteMessagesPromises);
+                console.log('All messages deleted');
+            } else {
+                console.log('No messages to delete');
+            }
+    
+            // Now delete the conversation document itself
+            await deleteDoc(conversationRef);
+            console.log('Conversation and all its messages deleted successfully.');
+            alert('Conversation and all its messages deleted successfully.');
+        } catch (error) {
+            console.error('Error deleting conversation:', error);
+            alert('Error deleting conversation.');
+        }
+    };
+
+
+    const DeleteConversation = (conversationId) => {
+        handleDeleteConversation(conversationId);
+    };
+
     // Right-side actions (Delete and Mute Notification)
     const renderRightActions = (progress, dragX) => (
         <View style={styles.rightActions}>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton} onPress={()=>{DeleteConversation(item.id)}} >
                 <Icon name="delete" size={25} color="#ff3b30" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>

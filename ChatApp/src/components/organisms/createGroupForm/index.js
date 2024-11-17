@@ -114,7 +114,7 @@ const CreateGroupForm = () => {
         value={description}
         onChangeText={setDescription}
         autoCapitalize="sentences"
-        leftIconName="pencil"
+        leftIconName="edit"
       />
 
       <Text style={styles.subtitle}>Select Members:</Text>

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import GlobalStyles from "../../globalStyles";
 
 const styles = StyleSheet.create({
     bubble: {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.5,
       shadowRadius: 5, 
       marginVertical: 10,
-      backgroundColor: '#EAEAEA',
+      backgroundColor: '#D3D3D3',
       borderRadius: 15, // Ensure both incoming and outgoing have rounded corners
       elevation: 8,
     },
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.5,
       shadowRadius: 5,
       marginVertical: 10,
-      backgroundColor: '#6BBE6E',
+      backgroundColor: '#4f938a',
       borderRadius: 15,
       elevation: 8,
     },

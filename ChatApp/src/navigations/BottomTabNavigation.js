@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ChatListScreen from '../screens/ChatListScreen';
 import GroupListScreen from '../screens/GroupListScreen';
 import { Animated } from 'react-native';
+import GlobalStyles from '../components/globalStyles';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,7 @@ const BottomTabNavigation = () => {
             </Animated.View>
           );
         },
-        tabBarActiveTintColor: '#4CAF50', // A lively green color for active tab
+        tabBarActiveTintColor: GlobalStyles.SIGNIN1_BUTTON_COLOR, // A lively green color for active tab
         tabBarInactiveTintColor: '#757575', // Gray for inactive tabs
         tabBarStyle: {
           backgroundColor: '#ffffff', // Lighter background color

@@ -1,6 +1,7 @@
 // group List style
 
 import { StyleSheet } from 'react-native';
+import GlobalStyles from '../../globalStyles';
 
 const styles = StyleSheet.create({
     safeArea: {
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
         right: 20,
         width: 60,
         height: 60,
-        backgroundColor: '#25D366', // WhatsApp's green color
+        backgroundColor: GlobalStyles.SIGNIN1_BUTTON_COLOR, // WhatsApp's green color
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',

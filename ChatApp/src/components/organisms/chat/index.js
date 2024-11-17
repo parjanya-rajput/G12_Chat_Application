@@ -127,7 +127,7 @@ const Chat = () => {
                     }
                 >
                     <Image
-                        source={{ uri: item.profileImage }}
+                        source={{ uri: item.profile_pic }}
                         style={styles.profilePic}
                     />
                 </TouchableOpacity>
@@ -209,7 +209,7 @@ const Chat = () => {
             {/* Message Input */}
             <View style={styles.inputContainer}>
                 <TouchableOpacity style={styles.autocompleteButton}>
-                    <Ionicons name="bulb-outline" size={20} color="#4CAF50" />
+                    <Ionicons name="bulb-outline" size={20} color="#609d95" />
                 </TouchableOpacity>
                 <TextInput
                     style={styles.input}
@@ -223,7 +223,7 @@ const Chat = () => {
                     style={styles.sendButton}
                     onPress={sendMessage}
                 >
-                    <Ionicons name="send" size={20} color="#4CAF50" style={{ transform: [{ rotate: '-30deg' }] }} />
+                    <Ionicons name="send" size={20} color="#609d95" style={{ transform: [{ rotate: '-30deg' }] }} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.cameraButton}>

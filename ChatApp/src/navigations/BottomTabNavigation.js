@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ChatListScreen from '../screens/ChatListScreen';
+import GroupListScreen from '../screens/GroupListScreen';
 import { Animated } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -20,6 +21,8 @@ const BottomTabNavigation = () => {
             iconName = 'chatbubble-ellipses-outline';
           } else if (route.name === 'Profile') {
             iconName = 'person-outline';
+          } else if (route.name === 'GroupChat') {
+            iconName = 'people-outline'; // Icon for Group Chat
           }
 
           const animatedSize = focused ? size + 5 : size;
@@ -63,6 +66,7 @@ const BottomTabNavigation = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }} />
       <Tab.Screen name="ChatList" component={ChatListScreen} options={{ tabBarLabel: 'Chats' }} />
+      <Tab.Screen name="GroupChat" component={GroupListScreen} options={{ tabBarLabel: 'Group Chat' }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profile' }} />
     </Tab.Navigator>
   );

@@ -69,6 +69,12 @@ const HomeScreen = ({ navigation }) => {
                 textColor="#FFFFFF"
                 onPress={() => navigation.navigate('CreateProfileScreen')}
             />
+            <ReusableButton
+                text="Group list"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('GroupList')}
+            />
         </View>
     );
 };

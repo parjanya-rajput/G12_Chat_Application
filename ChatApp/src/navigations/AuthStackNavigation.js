@@ -15,6 +15,10 @@ import EditProfileScreen from "../screens/EditProfileScreen";
 import UserListScreen from "../screens/UserListScreen";
 import CreateProfileScreen from "../screens/CreateProfileScreen"
 // import HomeScreen from '../screens/HomeScreen';
+import GroupListScreen from "../screens/GroupListScreen";
+import CreateGroup from "../screens/CreateGroup";
+import GroupDetailsScreen from "../screens/GroupDetailScreen";
+import AddMemberScreen from "../screens/AddMemberScreen"
 
 const Stack = createStackNavigator();
 
@@ -68,7 +72,29 @@ const AuthStackNavigation = () => {
                 component={CreateProfileScreen}
                 options={{ headerShown: false }}
             />
+            <Stack.Screen
+                name="CreateGroup"
+                component={CreateGroup}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="GroupList"
+                component={GroupListScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="GroupDetails"
+                component={GroupDetailsScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="AddMember"
+                component={AddMemberScreen}
+                options={{ headerShown: true }}
+            />
+
         </Stack.Navigator>
+        
     );
 };
 

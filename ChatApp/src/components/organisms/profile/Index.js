@@ -97,6 +97,7 @@ const ProfileView = () => {
   });
 
   return (
+
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity

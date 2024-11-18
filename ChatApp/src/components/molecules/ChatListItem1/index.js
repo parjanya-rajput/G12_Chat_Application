@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -54,18 +54,6 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
         addConversation(itemId); // Pass the sender's ID (item.id)
     };
 
-    // Right-side actions (Delete and Mute Notification)
-    const renderRightActions = (progress, dragX) => (
-        <View style={styles.rightActions}>
-            <TouchableOpacity style={styles.actionButton}>
-                <Icon name="delete" size={25} color="#ff3b30" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-                <Icon name="bell-off" size={25} color="#ffcc00" />
-            </TouchableOpacity>
-        </View>
-    );
-
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>
@@ -75,10 +63,9 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
     }
 
     return (
-        <Swipeable
-            renderRightActions={renderRightActions}
-            onSwipeableOpen={() => onSwipeOpen()}
-        >
+        <SafeAreaView>
+
+        
             <View style={styles.container}>
                 {/* Profile Image with black background */}
                 <TouchableOpacity
@@ -98,7 +85,7 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
                     <Text style={styles.status}>{item.bio}</Text>
                 </TouchableOpacity>
             </View>
-        </Swipeable>
+        </SafeAreaView>
     );
 };
 

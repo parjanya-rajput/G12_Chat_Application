@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View ,Image} from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import { Text } from "@rneui/themed";
+import Icon from "react-native-vector-icons/MaterialIcons"; // Import the Icon component
 import ReusableButton from "../../atoms/ReusableButton/index";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style"; // Assuming style.js is your stylesheet
@@ -12,7 +13,11 @@ import { resetPassword } from "../../../firebase/authService"; // Import your re
 import { validateEmail } from "../../../helper/validateEmail";
 import CustomInput from "../../atoms/InputField";
 
+// Import the useNavigation hook
+import { useNavigation } from "@react-navigation/native";
+
 const ForgotPasswordForm = () => {
+  const navigation = useNavigation(); // Hook to access navigation
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
@@ -35,15 +40,26 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    
     <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("../../../../assets/AppIcon/SpringTalkIcon.png")}
-            style={styles.Icon}
-          />
-        </View>
-      <Text style={styles.title}>Reset Password</Text>
+      {/* Header with back button */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()} // Go back on button press
+        >
+          <Icon name="arrow-back" size={24} color="#000" /> 
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Reset Password</Text>
+      </View>
+
+      {/* Logo */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require("../../../../assets/AppIcon/SpringTalkIcon.png")}
+          style={styles.Icon}
+        />
+      </View>
+
       <Text style={styles.subtitle}>
         Enter your email address to reset your password.
       </Text>
@@ -53,10 +69,10 @@ const ForgotPasswordForm = () => {
         placeholder="Enter your email"
         value={email}
         onChangeText={handleEmailChange}
-        keyboardType="email-address" // Set keyboard type for email input
-        autoCapitalize="none" // Disable auto-capitalization for email
-        leftIconName="email" // Set the left icon to "email"
-        errorMessage={!isEmailValid && email ? "Invalid email format" : ""} // Show error if email is invalid
+        keyboardType="email-address"
+        autoCapitalize="none"
+        leftIconName="email"
+        errorMessage={!isEmailValid && email ? "Invalid email format" : ""}
         style={{ fontFamily: "cretype-caros" }}
       />
 

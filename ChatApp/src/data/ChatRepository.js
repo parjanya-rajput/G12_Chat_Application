@@ -80,6 +80,48 @@ export class ChatRepository {
         });
     }
 
+    // async sendGroupMessage(groupId, senderId, content, messageType = "text") {
+    //     const messageRef = collection(firestore, "Groups", groupId, "message");
+
+    //     const msg = await addDoc(collection(firestore, "Groups", groupId, "message"), {
+    //         sender_id: auth.currentUser.uid,
+    //         text: content,
+    //         timestamp: serverTimestamp(),
+    //         type: messageType,
+    //         msg_status: "sent",
+    //     });
+
+    //     await updateDoc(doc(firestore, "Groups", groupId), {
+    //         lastmsg: content,
+    //         lastmsg_time: serverTimestamp(),
+    //     });
+    // }
+
+    // loadGroupMessages(groupId, callback) {
+    //     try {
+    //         // Reference to the messages collection for the given conversation
+    //         const messagesRef = collection(firestore, "Groups", groupId, "message");
+
+    //         // Create a query to order messages by timestamp in ascending order
+    //         const q = query(messagesRef, orderBy("timestamp", "asc"));
+
+    //         // Use onSnapshot to listen to changes in the messages collection
+    //         const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //             const messages = querySnapshot.docs.map(doc => ({
+    //                 id: doc.id,
+    //                 ...doc.data(),
+    //             }));
+    //             callback(messages); // Pass the messages to the provided callback
+    //         });
+
+    //         // Return the unsubscribe function to stop listening when no longer needed
+    //         return unsubscribe;
+    //     } catch (error) {
+    //         console.error("Error loading messages:", error);
+    //         throw error;
+    //     }
+    // }
+
     // Send message function
     // async sendMessage(conversationId, senderId, content, messageType = "text") {
     //     try {

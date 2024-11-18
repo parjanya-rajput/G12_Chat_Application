@@ -11,6 +11,8 @@ import { GetUserByUserId } from '../../../domain/GetUserByUserId';
 
 import { firestore } from '../../../firebase/firebase'; // Import the firestore object correctly
 import { getDoc, doc, deleteDoc, collection, getDocs, query } from 'firebase/firestore';
+import { FontAwesome } from '@expo/vector-icons';
+import { Modal } from 'react-native';
 
 
 const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
@@ -20,6 +22,11 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
     const senderId = item.participant_ids.find(id => id !== currentUserId);
     const [isLoading, setIsLoading] = useState(true);
+
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false); // State for full-screen image view
+
     // useEffect(() => {
     //     const fetchSenderProfile = async () => {
     //         try {
@@ -208,6 +215,19 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
         );
     }
 
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+        setIsFullScreen(false);
+    };
+
+    const closePartial = () => {
+        setIsModalVisible(false);
+    };
+
+    const closeFull = () => {
+        setIsFullScreen(false);
+    };
+
 
     return (
         <Swipeable
@@ -219,10 +239,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
             <View style={styles.container}>
                 {/* Profile Image with black background */}
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('ProfilePicView', {
-                        dpImage: senderProfile.profile_pic,
-                        groupName: senderProfile.name,
-                    })}
+                    onPress={() => setIsModalVisible(true)}
                 >
                     <View style={styles.imageWrapper}>
                         <Image source={{ uri: senderProfile.profile_pic }} style={styles.profileImage} />
@@ -237,6 +254,64 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
                     <Text style={styles.username}>{senderProfile.name}</Text>
                     <Text style={styles.status}>{item.last_message}</Text>
                 </TouchableOpacity>
+
+
+                {/* Partial-Screen Modal */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={handleCloseModal}
+            
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            onPress={closePartial}
+                            style={styles.closeButton}
+                        >
+                            <FontAwesome name="close" size={24} color="#fff" />
+                        </TouchableOpacity>
+                        <Image
+                            source={{ uri: senderProfile.profile_pic }}
+                            style={styles.modalImage}
+                            resizeMode="contain"
+                        />
+                        <Text style={styles.modalName}>{senderProfile.name}</Text>
+                        {/* <TouchableOpacity
+                            style={styles.fullScreenButton}
+                            onPress={() => {
+                                setIsModalVisible(false);
+                                setIsFullScreen(true);
+                            }}
+                        >
+                            <Text style={styles.fullScreenText}>View Full Screen</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Full-Screen Modal */}
+            <Modal
+                animationType="fade"
+                visible={isFullScreen}
+                transparent={true}
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.fullScreenOverlay}>
+                    <TouchableOpacity
+                        onPress={closeFull}
+                        style={styles.closeButtonFullScreen}
+                    >
+                        <FontAwesome name="close" size={30} color="#fff" />
+                    </TouchableOpacity>
+                    <Image
+                        source={{ uri: senderProfile.profile_pic }}
+                        style={styles.fullScreenImage}
+                        resizeMode="contain"
+                    />
+                </View>
+            </Modal>
             </View>
         </Swipeable>
     );

@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 // import '@react-native-firebase/messaging';
 

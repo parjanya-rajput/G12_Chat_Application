@@ -21,9 +21,12 @@ import styles from "./style";
 import { ProfileCreate } from "../../../domain/Profile";
 
 import { useRoute } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+
+const CLOUD_NAME = "daayhy7z8";
+const UPLOAD_PRESET = "g12-chat-app";
 
 const CreateProfile = () => {
-
   const route = useRoute();
   const { user } = route.params;
 
@@ -31,7 +34,9 @@ const CreateProfile = () => {
   const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState(user.email); // Static email
-  const [profilePic, setProfilePic] = useState("https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg");
+  const [profilePic, setProfilePic] = useState(
+    "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"
+  );
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,13 +55,131 @@ const CreateProfile = () => {
     extrapolate: "clamp",
   });
 
-  const handleProfilePicChange = () => {
-    alert("Profile picture change functionality goes here.");
+  const handleProfilePicChange = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!result.granted) {
+      Alert.alert(
+        "Permission Required",
+        "You need to grant permissions to access the camera or gallery."
+      );
+      return;
+    }
+
+    const options = [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Take Photo",
+        onPress: async () => {
+          const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+          handleImageResult(result);
+        },
+      },
+      {
+        text: "Choose from Gallery",
+        onPress: async () => {
+          const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+          handleImageResult(result);
+        },
+      },
+    ];
+
+    Alert.alert("Select Profile Picture", "Choose an option", options);
+  };
+
+  const handleImageResult = async (result) => {
+    if (result.canceled) {
+      // Changed from cancelled to canceled
+      console.log("User canceled image selection");
+      return;
+    }
+
+    // Check if there are any assets selected
+    if (!result.assets || result.assets.length === 0) {
+      Alert.alert("Error", "No image was selected.");
+      return;
+    }
+
+    const imageUri = result.assets[0].uri;
+    if (!imageUri) {
+      Alert.alert("Error", "Failed to retrieve the image URI.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const cloudinaryUrl = await uploadImageToCloudinary(imageUri);
+      if (cloudinaryUrl) {
+        setProfilePic(cloudinaryUrl);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to upload image.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const uploadImageToCloudinary = async (imageUri) => {
+    if (!imageUri) {
+      throw new Error("Image URI is undefined");
+    }
+
+    try {
+      const data = new FormData();
+      const fileType = imageUri.split(".").pop();
+      const file = {
+        uri: imageUri,
+        type: `image/${fileType}`,
+        name: `upload.${fileType}`,
+      };
+
+      data.append("file", file);
+      data.append("upload_preset", UPLOAD_PRESET);
+      data.append("cloud_name", CLOUD_NAME);
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: data,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Upload failed");
+      }
+
+      const result = await response.json();
+      setProfilePic(result.secure_url);
+      if (!result.secure_url) {
+        throw new Error("No URL in response");
+      }
+
+      return result.secure_url;
+    } catch (error) {
+      console.error("Upload error:", error);
+      throw error;
+    }
   };
 
   const handleEmailFieldPress = () => {
     Alert.alert("Uneditable Field", "This field cannot be edited.", [
-      { text: "OK", onPress: () => { } },
+      { text: "OK", onPress: () => {} },
     ]);
   };
 
@@ -64,6 +187,7 @@ const CreateProfile = () => {
     setIsLoading(true);
 
     try {
+      await ProfileCreate.execute({ name, bio, phone, profilePic, isOnline });
       if (!name || !bio || !phone) {
         alert("Please fill all the fields.");
         setIsLoading(false);
@@ -89,12 +213,12 @@ const CreateProfile = () => {
     } catch (error) {
       alert(error.message);
     }
-  }
+  };
 
   if (isLoading) {
     // Show a loading indicator while Firebase is checking the auth state
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -105,8 +229,7 @@ const CreateProfile = () => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Create Profile</Text>
@@ -115,22 +238,19 @@ const CreateProfile = () => {
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         scrollEventThrottle={16}
-        style={styles.scrollView}
-      >
+        style={styles.scrollView}>
         <Animated.View
           style={[
             styles.profileContainer,
             { height: profileHeight, opacity: profileOpacity },
-          ]}
-        >
+          ]}>
           <View style={styles.profileImageContainer}>
             <Image source={{ uri: profilePic }} style={styles.profileImage} />
 
             {/* Add Upload DP Button */}
             <TouchableOpacity
               style={styles.uploadButtonOnImage}
-              onPress={handleProfilePicChange}
-            >
+              onPress={handleProfilePicChange}>
               <Icon name="camera-alt" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -142,9 +262,7 @@ const CreateProfile = () => {
             placeholder="Enter your name"
             placeholderTextColor="#888"
           />
-          <Text style={styles.userHandle}>
-            {email}
-          </Text>
+          <Text style={styles.userHandle}>{email}</Text>
 
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
@@ -153,8 +271,7 @@ const CreateProfile = () => {
                 style={[
                   styles.statusText,
                   isOnline ? styles.online : styles.offline,
-                ]}
-              >
+                ]}>
                 {isOnline ? "Online" : "Offline"}
               </Text>
               <Switch

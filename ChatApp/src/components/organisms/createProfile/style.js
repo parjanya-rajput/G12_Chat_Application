@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+const { height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    // paddingTop: 20,
+    marginTop: 0.05 * height,
   },
   backButton: {
     position: "absolute",
@@ -28,9 +29,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   readOnlyEmail: {
-    color: "gray", 
+    color: "gray",
   },
-  
+
   profileImageContainer: {
     position: "relative",
     alignItems: "center",
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // Even spacing between elements
     paddingHorizontal: 20,
     marginTop: 5,
-    marginBottom:15,
+    marginBottom: 15,
   },
   activityText: {
     fontSize: 14,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 14,
     fontWeight: "bold",
-    marginRight: 10, 
+    marginRight: 10,
   },
   online: {
     color: "#4CAF50",

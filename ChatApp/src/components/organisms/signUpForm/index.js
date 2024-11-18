@@ -9,6 +9,7 @@ import styles from "./style";
 
 // Firebase Sign Up
 import { signUp } from "../../../firebase/authService";
+import { signIn } from "../../../firebase/authService";
 
 // Function to validation
 import { validateEmail } from "../../../helper/validateEmail";
@@ -36,23 +37,37 @@ const SignUpForm = () => {
   // Function to handle sign up
   const handleSignUp = () => {
     setIsLoading(true);
-    signUp(email, password, name)
-      .then((user) => {
-        if (user) {
-          setUser(user);
-          // Display a toast message
-          alert(
-            "Verification email sent to: " +
-            user.email +
-            ". Please verify your email to login."
-          );
+    if (user) {
+      signIn(email, password)
+        .then((user) => {
+          if (user) {
+            if (user.emailVerified) {
+              navigation.replace("CreateProfileScreen", {
+                user: user,
+              });
+            } else alert("Please verify your email address before signing in");
+          } else {
+            alert("User not found");
+          }
           setIsLoading(false);
-          navigation.replace("CreateProfileScreen", {
-            user: user,
-          }); // Navigate to Home after sign up
-        }
-      })
-      .catch((error) => alert(error.message));
+        })
+        .catch((error) => alert(error.message.toString()));
+    } else {
+      signUp(email, password, name)
+        .then((user) => {
+          if (user) {
+            setUser(user);
+            // Display a toast message
+            alert(
+              "Verification email sent to: " +
+                user.email +
+                ". Please verify your email to login."
+            );
+            setIsLoading(false); // Navigate to Home after sign up
+          }
+        })
+        .catch((error) => alert(error.message));
+    }
   };
 
   //Used for debugging
@@ -75,7 +90,7 @@ const SignUpForm = () => {
   if (isLoading) {
     // Show a loading indicator while Firebase is checking the auth state
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );

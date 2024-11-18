@@ -1,9 +1,7 @@
-import React from 'react'
-import ProfileView from '../components/organisms/profile/Index'
+import React from "react";
+import ProfileView from "../components/organisms/profile/Index";
 const ProfileScreen = () => {
-  return (
-    <ProfileView />
-  )
-}
+  return <ProfileView />;
+};
 
-export default ProfileScreen
+export default ProfileScreen;

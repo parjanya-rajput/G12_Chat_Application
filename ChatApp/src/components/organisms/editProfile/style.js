@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 20,
+    marginTop: 20,
   },
   backButton: {
     position: "absolute",

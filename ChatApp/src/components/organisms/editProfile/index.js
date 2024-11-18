@@ -9,36 +9,37 @@ import {
   TextInput,
   Switch,
   ActivityIndicator,
+  Alert,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import ReusableButton from "../../atoms/ReusableButton";
 import GlobalStyles from "../../globalStyles";
 import styles from "./style";
-
+import * as ImagePicker from "expo-image-picker";
 import { ProfileUpdate } from "../../../domain/Profile";
 
-import { useRoute } from '@react-navigation/native';
+const CLOUD_NAME = "daayhy7z8";
+const UPLOAD_PRESET = "g12-chat-app";
 
 const UpdateProfileScreen = () => {
-
+  const navigation = useNavigation();
   const route = useRoute();
   const { profile } = route.params;
 
-
-  const [name, setName] = useState(profile.name);
-  const [bio, setBio] = useState(profile.bio);
-  const [phone, setPhone] = useState(profile.phone);
+  // State variables
+  const [name, setName] = useState(profile.name || "");
+  const [bio, setBio] = useState(profile.bio || "");
+  const [phone, setPhone] = useState(profile.phone || "");
   const [profilePic, setProfilePic] = useState(
-    "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
+    profile.profilePic ||
+      "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
   );
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const scrollY = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
 
   const profileHeight = scrollY.interpolate({
     inputRange: [0, 300],
@@ -52,26 +53,146 @@ const UpdateProfileScreen = () => {
     extrapolate: "clamp",
   });
 
-  const handleProfilePicChange = () => {
-    alert("Profile picture change functionality goes here.");
+  const handleProfilePicChange = async () => {
+    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!result.granted) {
+      Alert.alert(
+        "Permission Required",
+        "You need to grant permissions to access the camera or gallery."
+      );
+      return;
+    }
+
+    const options = [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Take Photo",
+        onPress: async () => {
+          const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+          handleImageResult(result);
+        },
+      },
+      {
+        text: "Choose from Gallery",
+        onPress: async () => {
+          const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+          handleImageResult(result);
+        },
+      },
+    ];
+
+    Alert.alert("Select Profile Picture", "Choose an option", options);
+  };
+
+  const handleImageResult = async (result) => {
+    if (result.canceled) {
+      // Changed from cancelled to canceled
+      console.log("User canceled image selection");
+      return;
+    }
+
+    // Check if there are any assets selected
+    if (!result.assets || result.assets.length === 0) {
+      Alert.alert("Error", "No image was selected.");
+      return;
+    }
+
+    const imageUri = result.assets[0].uri;
+    if (!imageUri) {
+      Alert.alert("Error", "Failed to retrieve the image URI.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const cloudinaryUrl = await uploadImageToCloudinary(imageUri);
+      if (cloudinaryUrl) {
+        setProfilePic(cloudinaryUrl);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to upload image.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const uploadImageToCloudinary = async (imageUri) => {
+    if (!imageUri) {
+      throw new Error("Image URI is undefined");
+    }
+
+    try {
+      const data = new FormData();
+      const fileType = imageUri.split(".").pop();
+      const file = {
+        uri: imageUri,
+        type: `image/${fileType}`,
+        name: `upload.${fileType}`,
+      };
+
+      data.append("file", file);
+      data.append("upload_preset", UPLOAD_PRESET);
+      data.append("cloud_name", CLOUD_NAME);
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: data,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Upload failed");
+      }
+
+      const result = await response.json();
+      setProfilePic(result.secure_url);
+      if (!result.secure_url) {
+        throw new Error("No URL in response");
+      }
+
+      return result.secure_url;
+    } catch (error) {
+      console.error("Upload error:", error);
+      throw error;
+    }
   };
 
   const handleUpdateProfile = async () => {
     setIsLoading(true);
     try {
       await ProfileUpdate.execute({ name, bio, phone, profilePic, isOnline });
-      setIsLoading(false);
-      alert("Profile updated successfully!");
+      // Implement your profile update logic here
+      Alert.alert("Success", "Profile updated successfully!");
       navigation.goBack();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Update Failed", "Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isLoading) {
-    // Show a loading indicator while Firebase is checking the auth state
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -82,8 +203,7 @@ const UpdateProfileScreen = () => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Update Profile</Text>
@@ -92,28 +212,26 @@ const UpdateProfileScreen = () => {
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         scrollEventThrottle={16}
-        style={styles.scrollView}
-      >
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}>
         <Animated.View
           style={[
             styles.profileContainer,
             { height: profileHeight, opacity: profileOpacity },
-          ]}
-        >
+          ]}>
           <TouchableOpacity onPress={handleProfilePicChange}>
             <Image source={{ uri: profilePic }} style={styles.profileImage} />
           </TouchableOpacity>
           <TextInput
             style={styles.usernameInput}
-            value={profile.name}
+            value={name}
             onChangeText={setName}
             placeholder="Enter your name"
             placeholderTextColor="#888"
           />
-          <Text style={styles.userHandle}>
-            @{name}
-          </Text>
-
+          <Text style={styles.userHandle}>@{name}</Text>
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
             <View style={styles.statusToggleContainer}>
@@ -121,8 +239,7 @@ const UpdateProfileScreen = () => {
                 style={[
                   styles.statusText,
                   isOnline ? styles.online : styles.offline,
-                ]}
-              >
+                ]}>
                 {isOnline ? "Online" : "Offline"}
               </Text>
               <Switch
@@ -142,10 +259,11 @@ const UpdateProfileScreen = () => {
               style={styles.infoInput}
               value={name}
               onChangeText={setName}
-              placeholder="Enter your Name"
+              placeholder="Enter your name"
               placeholderTextColor="#888"
             />
           </View>
+
           <View style={styles.infoCard}>
             <Text style={styles.label}>Phone Number</Text>
             <TextInput
@@ -157,13 +275,14 @@ const UpdateProfileScreen = () => {
               placeholderTextColor="#888"
             />
           </View>
+
           <View style={styles.infoCard}>
             <Text style={styles.label}>Bio</Text>
             <TextInput
               style={styles.infoInput}
               value={bio}
               onChangeText={setBio}
-              placeholder="Enter your Bio"
+              placeholder="Enter your bio"
               placeholderTextColor="#888"
             />
           </View>

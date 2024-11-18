@@ -75,6 +75,12 @@ const HomeScreen = ({ navigation }) => {
                 textColor="#FFFFFF"
                 onPress={() => navigation.navigate('GroupList')}
             />
+            <ReusableButton
+                text="Group Chat"
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                onPress={() => navigation.navigate('GroupChatScreen')}
+            />
         </View>
     );
 };

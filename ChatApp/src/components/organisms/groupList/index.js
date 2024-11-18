@@ -55,9 +55,10 @@ const GroupListScreen = ({ navigation }) => {
             group.groupName.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
 
-    // Handle navigation to GroupDetailsScreen
+    // Handle navigation to GroupChatScreen
     const handleGroupPress = (groupDetails) => {
-        navigation.navigate('GroupDetails', { groupDetails });
+        console.log('Navigating with groupDetails:', groupDetails);  // Debugging
+        navigation.navigate('GroupChatScreen', { groupDetails:groupDetails });
     };
 
     // Render individual group items

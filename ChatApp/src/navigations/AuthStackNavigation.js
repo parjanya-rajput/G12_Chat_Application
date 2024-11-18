@@ -19,87 +19,95 @@ import AllUserScreen from "../screens/AllUserListScreen";
 import GroupListScreen from "../screens/GroupListScreen";
 import CreateGroup from "../screens/CreateGroup";
 import GroupDetailsScreen from "../screens/GroupDetailScreen";
-import AddMemberScreen from "../screens/AddMemberScreen";
+import AddMemberScreen from "../screens/AddMemberScreen"
+import GroupChatScreen from "../screens/GroupChatScreen";
 
 const Stack = createStackNavigator();
 
 const AuthStackNavigation = () => {
-  return (
-    <Stack.Navigator initialRouteName="OnBoardingScreen">
-      <Stack.Screen
-        name="OnBoardingScreen"
-        component={OnBoardingScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={SignupScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="ForgetPassword"
-        component={ForgetPassword}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Home"
-        component={BottomTabNavigation}
-        options={{ headerShown: false }}
-      />
-      {/* <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true }} /> */}
-      {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
-      <Stack.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="EditProfile"
-        component={EditProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UserList"
-        component={UserListScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="CreateProfileScreen"
-        component={CreateProfileScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AllUserScreen"
-        component={AllUserScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CreateGroup"
-        component={CreateGroup}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="GroupList"
-        component={GroupListScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="GroupDetails"
-        component={GroupDetailsScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="AddMember"
-        component={AddMemberScreen}
-        options={{ headerShown: true }}
-      />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+                name="OnBoardingScreen"
+                component={OnBoardingScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="ForgetPassword"
+                component={ForgetPassword}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Home"
+                component={BottomTabNavigation}
+                options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true }} /> */}
+            {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
+            <Stack.Screen
+                name="Chat"
+                component={ChatScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="EditProfile"
+                component={EditProfileScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="UserList"
+                component={UserListScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="CreateProfileScreen"
+                component={CreateProfileScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="AllUserScreen"
+                component={AllUserScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="CreateGroup"
+                component={CreateGroup}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="GroupList"
+                component={GroupListScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="GroupDetails"
+                component={GroupDetailsScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="AddMember"
+                component={AddMemberScreen}
+                options={{ headerShown: true }}
+            />
+            <Stack.Screen
+                name="GroupChatScreen"
+                component={GroupChatScreen}
+                options={{ headerShown: true }}
+            />
+
+        </Stack.Navigator>
+        
+    );
 };
 
 export default AuthStackNavigation;

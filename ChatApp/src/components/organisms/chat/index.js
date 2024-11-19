@@ -251,6 +251,9 @@ import { SendMessage } from '../../../domain/SendMessage';
 import { ChatRepository } from '../../../data/ChatRepository';
 import LoadMessages from '../../../domain/LoadMessage';
 import { auth } from '../../../firebase/firebase';
+import { BlurView } from 'expo-blur';
+import { ScrollView } from 'react-native';
+import { Keyboard } from 'react-native';
 
 const Chat = () => {
     const navigation = useNavigation();
@@ -263,6 +266,10 @@ const Chat = () => {
     const [showSearchBar, setShowSearchBar] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false); // State for full-screen image view
+    const [isSuggestionBoxVisible, setIsSuggestionBoxVisible] = useState(false);
+    const [isBlurred, setIsBlurred] = useState(false); // State for blur effect
+    const [response, setResponse] = useState("This is your SuggestionBox!");
+
 
     const chatRepository = new ChatRepository();
     const loadMessagesUse = new LoadMessages(chatRepository);
@@ -322,8 +329,20 @@ const Chat = () => {
         setIsFullScreen(false);
     };
 
+    const handleResponse = (response) => {
+        setText(response);
+        setIsBlurred(false);
+        setIsSuggestionBoxVisible(false);
+    }
+
     return (
         <View style={styles.container}>
+            {/* Apply BlurView when isBlurred is true */}
+            {isBlurred && (
+                <BlurView intensity={100} style={styles.backgroundBlur}>
+                </BlurView>
+            )}
+
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -376,7 +395,7 @@ const Chat = () => {
                     <View style={styles.modalContainer}>
                         <TouchableOpacity
                             onPress={closePartial}
-                            style={styles.closeButton}
+                            style={styles.closeButtonProfile}
                         >
                             <FontAwesome name="close" size={24} color="#fff" />
                         </TouchableOpacity>
@@ -446,9 +465,47 @@ const Chat = () => {
                 />
             </KeyboardAvoidingView>
 
+            {/* Chat Box triggered by bulb-outline button */}
+        {isSuggestionBoxVisible && (
+                <View style={[styles.SuggestionBox, { maxHeight: '40%' }]}>
+                    <ScrollView>
+                        <Text style={styles.SuggestionBoxText}>{response}</Text>
+                    </ScrollView>
+                    <View style={styles.SuggestionBoxButtons}>
+                        {/* Close Button */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                // Close the chat box and remove the blur effect
+                                Keyboard.dismiss();
+                                setIsSuggestionBoxVisible(false);
+                                setIsBlurred(false); // Remove the blur when chat box is closed
+                            }}
+                            style={styles.closeButton}
+                        >
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                        {/* OK Button */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                // Handle OK button action here
+                                handleResponse(response);
+                            }}
+                            style={styles.okButton}
+                        >
+                            <Text style={styles.okButtonText}>OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )}
+
             {/* Message Input */}
             <View style={styles.inputContainer}>
-                <TouchableOpacity style={styles.autocompleteButton}>
+                <TouchableOpacity style={styles.autocompleteButton}
+                    onPress={() => {
+                        setIsSuggestionBoxVisible(!isSuggestionBoxVisible); // Toggle chat box visibility
+                        setIsBlurred(!isBlurred); // Toggle blur
+                    }}
+                >
                     <Ionicons name="bulb-outline" size={20} color="#609d95" />
                 </TouchableOpacity>
                 <TextInput

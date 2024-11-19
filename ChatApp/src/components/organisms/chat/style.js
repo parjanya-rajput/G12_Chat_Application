@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 10,
     },
-    closeButton: {
+    closeButtonProfile: {
         alignSelf : 'center',
         position: 'relative',
         // top: 10,
@@ -221,7 +221,71 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 
-
+    SuggestionBox: {
+      position: 'absolute',
+      bottom: 100,
+      left: 20,
+      right: 20,
+      backgroundColor: '#ffffff',
+      borderRadius: 10,
+      padding: 15,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 5,
+      alignItems: 'center',
+      zIndex: 2,
+      overflow: 'hidden',
+  },
+  SuggestionBoxText: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: '#333',
+    textAlign: 'center',
+  },
+  closeButton: {
+    backgroundColor:  '#609d95',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  backgroundBlur: {
+    ...StyleSheet.absoluteFillObject, 
+    zIndex: 1, 
+  },
+  mainContent: {
+    flex: 1, 
+    zIndex: 1, 
+  },
+  okButton: {
+    backgroundColor:  '#609d95',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginLeft: 20,
+  },
+  
+  okButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+  SuggestionBoxButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
 
 });
 

@@ -34,7 +34,7 @@ const UpdateProfileScreen = () => {
   const [phone, setPhone] = useState(profile.phone || "");
   const [profilePic, setProfilePic] = useState(
     profile.profilePic ||
-      "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
+    "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
   );
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,14 +54,14 @@ const UpdateProfileScreen = () => {
   });
 
   const handleProfilePicChange = async () => {
-    const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!result.granted) {
-      Alert.alert(
-        "Permission Required",
-        "You need to grant permissions to access the camera or gallery."
-      );
-      return;
-    }
+    // const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    // if (!result.granted) {
+    //   Alert.alert(
+    //     "Permission Required",
+    //     "You need to grant permissions to access the camera or gallery."
+    //   );
+    //   return;
+    // }
 
     const options = [
       { text: "Cancel", style: "cancel" },

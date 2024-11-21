@@ -18,11 +18,26 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.parjanya05.ChatApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Sprint Talk to access your photos.",
+          "savePhotosPermission": "Allow Talk to save photos."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1d30f2d6-624f-4cff-9459-8b66eb9c8bdb"
+      }
+    }
   }
 }

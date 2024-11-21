@@ -29,7 +29,7 @@ const Stack = createStackNavigator();
 
 const AuthStackNavigation = () => {
     return (
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="OnBoardingScreen">
             <Stack.Screen
                 name="OnBoardingScreen"
                 component={OnBoardingScreen}
@@ -119,7 +119,7 @@ const AuthStackNavigation = () => {
             />
 
         </Stack.Navigator>
-        
+
     );
 };
 

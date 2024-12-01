@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import ProfileScreen from '../screens/ProfileScreen';
-import HomeScreen from '../screens/HomeScreen';
+// import HomeScreen from '../screens/HomeScreen';
 import ChatListScreen from '../screens/ChatListScreen';
 import GroupListScreen from '../screens/GroupListScreen';
 import { Animated } from 'react-native';
@@ -17,8 +17,6 @@ const BottomTabNavigation = () => {
         tabBarIcon: ({ color, size, focused }) => {
           let iconName;
           if (route.name === 'Home') {
-            iconName = 'home-outline';
-          } else if (route.name === 'ChatList') {
             iconName = 'chatbubble-ellipses-outline';
           } else if (route.name === 'Profile') {
             iconName = 'person-outline';
@@ -65,8 +63,8 @@ const BottomTabNavigation = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="ChatList" component={ChatListScreen} options={{ tabBarLabel: 'Chats' }} />
+      {/* <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Home' }} /> */}
+      <Tab.Screen name="Home" component={ChatListScreen} options={{ tabBarLabel: 'Chats' }} />
       <Tab.Screen name="GroupChat" component={GroupListScreen} options={{ tabBarLabel: 'Group Chat' }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profile' }} />
     </Tab.Navigator>

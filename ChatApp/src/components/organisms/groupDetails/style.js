@@ -5,7 +5,8 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
         backgroundColor: '#fff',
     },
     groupName: {
@@ -80,5 +81,5 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-     
+
 });

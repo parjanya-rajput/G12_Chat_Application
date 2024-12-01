@@ -27,15 +27,6 @@ export class ChatRepository {
         return docRef.id;
     }
 
-    // async loadMessages(conversationId) {
-    //     const messagesRef = collection(firestore, "conversation", conversationId, "messages");
-    //     const q = query(messagesRef, orderBy("timestamp", "asc"));
-    //     const querySnapshot = await getDocs(q);
-    //     const messages = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    //     // console.log(messages);
-    //     return messages;
-    // }
-
     loadMessages(conversationId, callback) {
         try {
             // Reference to the messages collection for the given conversation
@@ -79,6 +70,35 @@ export class ChatRepository {
             last_message_timestamp: serverTimestamp(),
         });
     }
+
+    getPastConversations(callback) {
+        const user = auth.currentUser;
+        if (!user) {
+            console.error("User not logged in");
+            return null;
+        }
+
+        try {
+            const conversationsRef = collection(firestore, "conversation");
+            const q = query(
+                conversationsRef,
+                where("participant_ids", "array-contains", user.uid),
+                orderBy("last_message_timestamp", "desc")
+            );
+
+            // Return the unsubscribe function from Firestore
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                const conversations = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                callback(conversations);
+            });
+
+            return unsubscribe; // Correctly return the function
+        } catch (error) {
+            console.error("Error in fetching conversations:", error);
+            throw error;
+        }
+    }
+
 
     // async sendGroupMessage(groupId, senderId, content, messageType = "text") {
     //     const messageRef = collection(firestore, "Groups", groupId, "message");
@@ -178,34 +198,6 @@ export class ChatRepository {
     //         throw error;
     //     }
     // }
-
-    getPastConversations(callback) {
-        const user = auth.currentUser;
-        if (!user) {
-            console.error("User not logged in");
-            return null;
-        }
-
-        try {
-            const conversationsRef = collection(firestore, "conversation");
-            const q = query(
-                conversationsRef,
-                where("participant_ids", "array-contains", user.uid),
-                orderBy("last_message_timestamp", "desc")
-            );
-
-            // Return the unsubscribe function from Firestore
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const conversations = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                callback(conversations);
-            });
-
-            return unsubscribe; // Correctly return the function
-        } catch (error) {
-            console.error("Error in fetching conversations:", error);
-            throw error;
-        }
-    }
 }
 
 export default new ChatRepository();

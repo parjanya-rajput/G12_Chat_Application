@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { CheckBox } from '@rneui/themed';
 import GetAllUsers from '../../../domain/GetAllUsers';  // Import the hook to fetch user details
-import { addMembersToGroup } from '../../../firebase/groupService'; // Import the addMembersToGroup function
+import { addMembersToGroup } from '../../../data/groupService'; // Import the addMembersToGroup function
 import styles from './style'; // Import the styles
 
 const AddMemberScreen = ({ route, navigation }) => {
@@ -15,7 +15,7 @@ const AddMemberScreen = ({ route, navigation }) => {
     useEffect(() => {
         // Ensure users is an array before attempting to filter
         if (Array.isArray(users)) {
-            const usersNotInGroup = users.filter(user => 
+            const usersNotInGroup = users.filter(user =>
                 !groupDetails.members.some(member => member.id === user.id) && // User is not part of the group
                 user.name.toLowerCase().includes(searchQuery.toLowerCase()) // Matches the search query
             );
@@ -54,10 +54,10 @@ const AddMemberScreen = ({ route, navigation }) => {
         try {
             // Only add the new members to Firestore (do not modify existing group members)
             await addMembersToGroup(groupDetails.id, newMembers);
-    
+
             // Navigate to GroupDetails screen after adding members
             navigation.navigate('GroupDetails', { groupDetails: groupDetails });
-    
+
             alert("Members added successfully!");
         } catch (error) {
             console.error("Error adding members:", error);

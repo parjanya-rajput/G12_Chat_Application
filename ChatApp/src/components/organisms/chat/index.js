@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, FlatList, KeyboardAvoidingView, Platform, Modal, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StatusBar, TextInput, FlatList, KeyboardAvoidingView, Platform, Modal, ActivityIndicator } from 'react-native';
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import styles from './style';
 import MessageBubble from '../../atoms/MessageBubble/Index';
@@ -10,7 +10,7 @@ import { ChatRepository } from '../../../data/ChatRepository';
 import LoadMessages from '../../../domain/LoadMessage';
 import { generateAIResponse } from "../../../api/OneTap"
 import { auth } from '../../../firebase/firebase';
-// import { BlurView } from 'expo-blur';
+// import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 import { Keyboard } from 'react-native';
 
@@ -20,23 +20,23 @@ const Chat = () => {
     const { item, conversationId } = route.params;
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
-    const flatListRef = useRef(null);
+    const flatListRef = useRef();
     const [searchQuery, setSearchQuery] = useState('');
     const [showSearchBar, setShowSearchBar] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false); // State for full-screen image view
+    const [isFullScreen, setIsFullScreen] = useState(false);
     const [isSuggestionBoxVisible, setIsSuggestionBoxVisible] = useState(false);
-    // const [isBlurred, setIsBlurred] = useState(false); // State for blur effect
     const [response, setResponse] = useState("");
     const [responseLoader, setResponseLoader] = useState(false);
-
+    const defaultProfilePic = "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+    const defaultUserName = "Unknown User";
 
     const chatRepository = new ChatRepository();
     const loadMessagesUse = new LoadMessages(chatRepository);
 
     const sendMessage = () => {
         if (!text.trim()) return;
-        SendMessage.execute(conversationId, item.id, text, 'text');
+        SendMessage.execute(conversationId, item.id, text.trim(), 'text');
         setText('');
     };
 
@@ -66,15 +66,34 @@ const Chat = () => {
         }
     }, [messages]);
 
-    const renderMessage = ({ item }) => (
-        <MessageBubble
-            message={item.text}
-            isOutgoing={item.sender_id === auth.currentUser.uid}
-            timestamp={item.timestamp}
-            status={item.msg_status}
-            searchQuery={searchQuery}
-        />
-    );
+    // const renderMessage = ({ item }) => (
+    //     <MessageBubble
+    //         message={item.text}
+    //         isOutgoing={item.sender_id === auth.currentUser.uid}
+    //         timestamp={item.timestamp}
+    //         status={item.msg_status}
+    //         searchQuery={searchQuery}
+    //     />
+    // );
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({ animated: true });
+            }
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({ animated: true });
+            }
+        });
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     const handleCloseModal = () => {
         setIsModalVisible(false);
@@ -91,7 +110,6 @@ const Chat = () => {
 
     const handleResponse = (response) => {
         setText(response);
-        // setIsBlurred(false);
         setIsSuggestionBoxVisible(false);
     }
 
@@ -103,7 +121,6 @@ const Chat = () => {
             const aiResponse = await generateAIResponse(text);
             setResponse(aiResponse.trim());
             setIsSuggestionBoxVisible(!isSuggestionBoxVisible); // Toggle chat box visibility
-            // setIsBlurred(!isBlurred);
         } catch (error) {
             console.error('Error sending message:', error);
         }
@@ -112,12 +129,7 @@ const Chat = () => {
 
     return (
         <View style={styles.container}>
-            {/* Apply BlurView when isBlurred is true
-            {isBlurred && (
-                <BlurView intensity={100} style={styles.backgroundBlur}>
-                </BlurView>
-            )} */}
-
+            <StatusBar barStyle="dark-content" />
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -127,7 +139,7 @@ const Chat = () => {
                 {/* Profile Image */}
                 <TouchableOpacity onPress={() => setIsModalVisible(true)}>
                     <Image
-                        source={{ uri: item.profile_pic }}
+                        source={{ uri: item != null ? item.profile_pic : defaultProfilePic }}
                         style={styles.profilePic}
                     />
                 </TouchableOpacity>
@@ -140,17 +152,14 @@ const Chat = () => {
                     }
                 >
                     <View style={styles.headerText}>
-                        <Text style={styles.profileName}>{item.name}</Text>
-                        <Text style={styles.accountType}>{item.bio}</Text>
+                        <Text style={styles.profileName}>{item != null ? item.name : defaultUserName}</Text>
+                        <Text style={styles.accountType}>{item != null ? (item.bio.length > 20 ? item.bio.substring(0, 17) + '...' : item.bio) : "SpringTalk"}</Text>
                     </View>
                 </TouchableOpacity>
 
                 <View style={styles.headerIcons}>
                     <TouchableOpacity style={styles.searchButton} onPress={handleSearchButtonClick}>
                         <FontAwesome name="search" size={23} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.audiocallButton}>
-                        <FontAwesome name="phone" size={23} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.moreoptButton}>
                         <MaterialIcons name="more-vert" size={23} color="black" />
@@ -175,20 +184,11 @@ const Chat = () => {
                             <FontAwesome name="close" size={24} color="#fff" />
                         </TouchableOpacity>
                         <Image
-                            source={{ uri: item.profile_pic }}
+                            source={{ uri: item != null ? item.profile_pic : defaultProfilePic }}
                             style={styles.modalImage}
                             resizeMode="contain"
                         />
-                        <Text style={styles.modalName}>{item.name}</Text>
-                        {/* <TouchableOpacity
-                            style={styles.fullScreenButton}
-                            onPress={() => {
-                                setIsModalVisible(false);
-                                setIsFullScreen(true);
-                            }}
-                        >
-                            <Text style={styles.fullScreenText}>View Full Screen</Text>
-                        </TouchableOpacity> */}
+                        <Text style={styles.modalName}>{item != null ? item.name : defaultUserName}</Text>
                     </View>
                 </View>
             </Modal>
@@ -208,7 +208,7 @@ const Chat = () => {
                         <FontAwesome name="close" size={30} color="#fff" />
                     </TouchableOpacity>
                     <Image
-                        source={{ uri: item.profile_pic }}
+                        source={{ uri: item != null ? item.profile_pic : defaultProfilePic }}
                         style={styles.fullScreenImage}
                         resizeMode="contain"
                     />
@@ -231,13 +231,22 @@ const Chat = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
             >
-                <FlatList
+                <ScrollView
                     ref={flatListRef}
-                    data={filteredMessages}
-                    renderItem={renderMessage}
-                    keyExtractor={(item) => item.id}
                     contentContainerStyle={{ paddingBottom: 90 }}
-                />
+                    onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: false })}
+                >
+                    {filteredMessages.map((item) => (
+                        <MessageBubble
+                            key={item.id}
+                            message={item.text}
+                            isOutgoing={item.sender_id === auth.currentUser.uid}
+                            timestamp={item.timestamp}
+                            status={item.msg_status}
+                            searchQuery={searchQuery}
+                        />
+                    ))}
+                </ScrollView>
             </KeyboardAvoidingView>
 
             {/* Chat Box triggered by bulb-outline button */}
@@ -253,7 +262,6 @@ const Chat = () => {
                                 // Close the chat box and remove the blur effect
                                 Keyboard.dismiss();
                                 setIsSuggestionBoxVisible(false);
-                                setIsBlurred(false); // Remove the blur when chat box is closed
                             }}
                             style={styles.closeButton}
                         >
@@ -289,6 +297,7 @@ const Chat = () => {
                 <TextInput
                     style={styles.input}
                     placeholder="Message"
+                    multiline={true}
                     value={text}
                     onChangeText={setText}
                     placeholderTextColor="black"
@@ -302,14 +311,6 @@ const Chat = () => {
                         size={20}
                         color="#609d95"
                         style={{ transform: [{ rotate: '-30deg' }] }}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cameraButton}>
-                    <FontAwesome
-                        name="camera"
-                        size={20}
-                        color="black"
-                        style={styles.cameraIcon}
                     />
                 </TouchableOpacity>
             </View>

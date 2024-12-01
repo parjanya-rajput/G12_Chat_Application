@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Animated, FlatList, SafeAreaView, ActivityIndicator, Text, View, TouchableOpacity, Image, TextInput, RefreshControl, Alert } from 'react-native';
+import { Animated, StatusBar, ActivityIndicator, Text, View, TouchableOpacity, Image, TextInput, RefreshControl, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ChatListItem from '../../molecules/ChatListItem';
 import GetAllUsers from '../../../domain/GetAllUsers'; // Import your Firebase fetch function 
@@ -19,7 +20,7 @@ const ChatListScreen = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     // const [profile, setProfile] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [conversation, setConversation] = useState(null);
+    const [conversation, setConversation] = useState([]);
     const [combinedData, setCombinedData] = useState([]); // To store combined Firebase and static data
 
     const [filteredConversations, setFilteredConversations] = useState([]);
@@ -72,18 +73,6 @@ const ChatListScreen = (props) => {
         setOpenSwipeRef(ref);
     };
 
-    const profileSliderHeight = scrollY.interpolate({
-        inputRange: [0, 150],
-        outputRange: [100, 0],
-        extrapolate: 'clamp',
-    });
-
-    const profileSliderOpacity = scrollY.interpolate({
-        inputRange: [0, 150],
-        outputRange: [1, 0],
-        extrapolate: 'clamp',
-    });
-
     // No need for manual refresh
     const handleRefresh = () => {
 
@@ -96,17 +85,17 @@ const ChatListScreen = (props) => {
 
     const handleSearch = (query) => {
         setSearchQuery(query);
-    
+
         if (query === '') {
             setFilteredConversations(conversation); // Show all conversations if search query is empty
         } else {
             // Filter conversations based on participant_ids[1]
             const filteredData = conversation.filter(item => {
                 const participantId = item.participant_ids[1]; // Get participant_id from conversation
-    
+
                 // Fetch user by participantId and check their name
                 const user = users.find(user => user.id === participantId); // Assuming `users` is your collection of user data
-    
+
                 // If user exists, check if their name matches the query
                 return user && user.name && user.name.toLowerCase().includes(query.toLowerCase());
             });
@@ -117,6 +106,8 @@ const ChatListScreen = (props) => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.header}>
+                <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
                 {isSearchActive ? (
                     <View style={styles.searchContainer}>
                         <TouchableOpacity onPress={() => {
@@ -143,54 +134,35 @@ const ChatListScreen = (props) => {
                 )}
             </View>
 
-            {/* {!isSearchActive && (
-                <Animated.View
-                    style={[
-                        styles.profileSliderContainer,
-                        {
-                            height: profileSliderHeight,
-                            opacity: profileSliderOpacity,
-                        },
-                    ]}
-                >
-                    <FlatList
-                        data={filteredData}
+            <View style={[styles.whiteBackgroundSection, isSearchActive && { flex: 1 }]}>
+                {conversation.length === 0 ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text>No conversations found. Create a new Conversation</Text>
+                    </View>
+                ) : (
+                    <Animated.FlatList
+                        data={filteredConversations}
                         renderItem={({ item }) => (
-                            <TouchableOpacity key={item.id} style={styles.profilePicWrapper}>
-                                <Image source={{ uri: item.profileImage }} style={styles.profilePic} />
-                            </TouchableOpacity>
+                            <ChatListItem
+                                item={item}
+                                conversation={conversation}
+                                onSwipeOpen={handleSwipeOpen}
+                            />
                         )}
                         keyExtractor={item => item.id}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.profileSlider}
+                        extraData={openSwipeRef}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: false }
+                        )}
+                        refreshControl={
+                            <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
+                        }
                     />
-                </Animated.View>
-            )} */}
-
-            <View style={[styles.whiteBackgroundSection, isSearchActive && { flex: 1 }]}>
-                <Animated.FlatList
-                    data={filteredConversations}
-                    renderItem={({ item }) => (
-                        <ChatListItem
-                            item={item}
-                            conversation={conversation}
-                            onSwipeOpen={handleSwipeOpen}
-                        />
-                    )}
-                    keyExtractor={item => item.id}
-                    extraData={openSwipeRef}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                        { useNativeDriver: false }
-                    )}
-                    refreshControl={
-                        <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
-                    }
-                />
+                )}
             </View>
 
-            <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate("AllUserScreen", {conversations : conversation})}>
+            <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate("AllUserScreen", { conversations: conversation })}>
                 <Icon name="plus" size={30} color="#fff" />
             </TouchableOpacity>
         </SafeAreaView>

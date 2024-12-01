@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, Platform, FlatList, ActivityIndicator, ScrollView, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StatusBar, TextInput, KeyboardAvoidingView, Platform, FlatList, ActivityIndicator, ScrollView, Keyboard } from 'react-native';
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { GroupRepository } from '../../../data/GroupRepository';  // Import GroupRepository for real-time updates
@@ -10,13 +10,14 @@ import { auth } from '../../../firebase/firebase';
 import LoadGroupMessages from '../../../domain/LoadGroupMessage';
 import { generateAIResponse } from '../../../api/OneTap';
 import styles from './style';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GroupChat = () => {
     const route = useRoute();
     const { groupDetails } = route.params;  // Retrieve passed groupDetails
     const [user, setuser] = useState(auth.currentUser);
     const navigation = useNavigation();
-    const flatListRef = useRef(null);
+    const flatListRef = useRef();
     const staticProfileImage = 'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg';
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
@@ -108,6 +109,25 @@ const GroupChat = () => {
         }
     }, [messages]);
 
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({ animated: true });
+            }
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({ animated: true });
+            }
+        });
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
 
     const filteredMessages = searchQuery.trim() // Only filter if searchQuery is not empty
         ? messages.filter((message) =>
@@ -148,10 +168,11 @@ const GroupChat = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <StatusBar barStyle="dark-content" />
             {/* Custom Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => navigation.goBack()}>
                     <FontAwesome name="arrow-left" size={20} color="black" />
                 </TouchableOpacity>
 
@@ -186,12 +207,6 @@ const GroupChat = () => {
                     <TouchableOpacity style={styles.searchButton} onPress={handleSearchButtonClick}>
                         <FontAwesome name="search" size={23} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.audiocallButton}>
-                        <FontAwesome name="phone" size={23} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.videocallButton}>
-                        <MaterialIcons name="videocam" size={23} color="black" />
-                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -207,13 +222,23 @@ const GroupChat = () => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}>
-                <FlatList
+
+                <ScrollView
                     ref={flatListRef}
-                    data={filteredMessages}
-                    renderItem={renderMessage}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{ paddingBottom: 90 }} />
-                {/* Your message input section */}
+                    contentContainerStyle={{ paddingBottom: 90 }}
+                    onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: false })}
+                >
+                    {filteredMessages.map((item) => (
+                        <MessageBubble
+                            key={item.id}
+                            message={item.text}
+                            isOutgoing={item.sender_id === auth.currentUser.uid}
+                            timestamp={item.timestamp}
+                            status={item.msg_status}
+                            searchQuery={searchQuery}
+                        />
+                    ))}
+                </ScrollView>
             </KeyboardAvoidingView>
 
             {isSuggestionBoxVisible && (
@@ -281,7 +306,7 @@ const GroupChat = () => {
                     <FontAwesome name="microphone" size={20} color="white" style={styles.micIcon} />
                 </TouchableOpacity> */}
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 

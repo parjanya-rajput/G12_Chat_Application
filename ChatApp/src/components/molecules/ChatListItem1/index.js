@@ -9,7 +9,7 @@ import { getFirestore, collection, query, where, getDocs, setDoc, doc, Timestamp
 import { auth } from '../../../firebase/firebase'; // Make sure to import your auth instance
 
 
-const ChatListItem1 = ({ item , onSwipeOpen }) => {
+const ChatListItem1 = ({ item, onSwipeOpen }) => {
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
     const db = getFirestore();
@@ -17,20 +17,20 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
     const addConversation = async (senderId) => {
         const currentUserId = auth.currentUser.uid; // Get the current user's ID
         const conversationRef = collection(db, 'conversation');
-    
+
         // Query to check if a conversation already exists between the current user and the sender
         const q = query(
             conversationRef,
             where('participant_ids', 'array-contains', currentUserId) // Only need to check for current user ID
         );
-    
+
         const querySnapshot = await getDocs(q);
-    
+
         // Filter the results manually to check if the senderId is also in the participant_ids array
-        const existingConversation = querySnapshot.docs.find(doc => 
+        const existingConversation = querySnapshot.docs.find(doc =>
             doc.data().participant_ids.includes(senderId)
         );
-    
+
         if (existingConversation) {
             // If a conversation already exists, log it
             console.log('Conversation already exists');
@@ -43,12 +43,12 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
                 last_message_timestamp: Timestamp.fromDate(new Date()), // Current timestamp
                 participant_ids: [currentUserId, senderId], // Add current and sender IDs
             });
-    
+
             console.log('New conversation added');
             alert("New conversation added");
         }
     };
-    
+
     // Usage in your component (on press or action)
     const handleConversationPress = (itemId) => {
         addConversation(itemId); // Pass the sender's ID (item.id)
@@ -65,7 +65,7 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
     return (
         <SafeAreaView>
 
-        
+
             <View style={styles.container}>
                 {/* Profile Image with black background */}
                 <TouchableOpacity
@@ -80,7 +80,7 @@ const ChatListItem1 = ({ item , onSwipeOpen }) => {
                 </TouchableOpacity>
 
                 {/* User Info */}
-                <TouchableOpacity style={styles.textContainer} onPress={()=>{handleConversationPress(item.id)}}>
+                <TouchableOpacity style={styles.textContainer} onPress={() => { handleConversationPress(item.id) }}>
                     <Text style={styles.username}>{item.name}</Text>
                     <Text style={styles.status}>{item.bio}</Text>
                 </TouchableOpacity>

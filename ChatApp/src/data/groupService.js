@@ -1,5 +1,5 @@
 // groupService
-import { firestore } from './firebase'; // Import your initialized Firestore instance
+import { firestore } from '../firebase/firebase'; // Import your initialized Firestore instance
 import { collection, doc, addDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 // Function to create a new group with optional members and messages
@@ -27,7 +27,7 @@ export const createGroup = async (groupId, groupName, description, members = [],
                 // id: member.id,
                 // name: member.name, // Adjust based on the actual field names you use
                 // role: member.role
-                isAdmin : member.role,
+                isAdmin: member.role,
             });
         }));
 
@@ -56,13 +56,13 @@ export const addMembersToGroup = async (groupId, members) => {
     try {
         // Reference to the group document
         const groupRef = doc(firestore, 'Groups', groupId);
-        
+
         // Add members to the "members" subcollection for the existing group
         await Promise.all(members.map(async (member) => {
             const memberRef = doc(firestore, 'Groups', groupId, 'members', member.id);
-            
+
             // Ensure isAdmin is defined and provide a default if missing
-            const isAdminValue = member.isAdmin=='true' ? 'Admin' : 'Member';
+            const isAdminValue = member.isAdmin == 'true' ? 'Admin' : 'Member';
             console.log(isAdminValue)
             await setDoc(memberRef, {
                 isAdmin: isAdminValue,

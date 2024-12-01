@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     paddingVertical: 15,
     paddingHorizontal: 20,
-    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
-},
+  },
 });
 
 export default styles;

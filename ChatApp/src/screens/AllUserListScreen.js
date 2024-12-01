@@ -12,9 +12,6 @@ import { useRoute } from '@react-navigation/native';
 const AllUserListScreen = () => {
 
   const route = useRoute();
-
-  
-
   const navigation = useNavigation();
   const [openSwipeRef, setOpenSwipeRef] = useState(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -24,20 +21,20 @@ const AllUserListScreen = () => {
   const [filteredUsers, setFilteredUsers] = useState([]); // Store filtered users based on search query
 
   // Fetch users from Firestore with real-time listener
-    useEffect(() => {
-        const q = query(collection(firestore, 'users')); // Reference to users collection
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const usersData = snapshot.docs.map(doc => ({
-                ...doc.data(), // Spread document data
-                id: doc.id,     // Add document id
-            }));
-            setUsers(usersData);
-            setFilteredUsers(usersData); // Initially show all users
-        });
+  useEffect(() => {
+    const q = query(collection(firestore, 'users')); // Reference to users collection
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const usersData = snapshot.docs.map(doc => ({
+        ...doc.data(), // Spread document data
+        id: doc.id,     // Add document id
+      }));
+      setUsers(usersData);
+      setFilteredUsers(usersData); // Initially show all users
+    });
 
-        // Cleanup listener
-        return () => unsubscribe();
-    }, []);
+    // Cleanup listener
+    return () => unsubscribe();
+  }, []);
 
   const handleSwipeOpen = (ref) => {
     if (openSwipeRef && openSwipeRef !== ref) {
@@ -85,8 +82,8 @@ const AllUserListScreen = () => {
         {isSearchActive ? (
           <View style={styles.searchContainer}>
             <TouchableOpacity onPress={() => {
-                setIsSearchActive(false);
-                handleSearch('');
+              setIsSearchActive(false);
+              handleSearch('');
             }}>
               <Icon name="arrow-left" size={25} color="#fff" />
             </TouchableOpacity>

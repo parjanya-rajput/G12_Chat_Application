@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Animated,
-  SafeAreaView,
   Text,
   View,
   TouchableOpacity,
   Image,
   ActivityIndicator,
-  FlatList,
+  StatusBar,
 } from "react-native";
+import {
+  SafeAreaView
+} from 'react-native-safe-area-context';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./style";
 import { ProfileFetch } from "../../../domain/Profile";
+import ReusableButton from "../../atoms/ReusableButton/index";
+import GlobalStyles from "../../globalStyles";
+import { logout } from "../../../firebase/authService";
+import AuthStackNavigation from "../../../navigations/AuthStackNavigation";
 
 const initialData = [
   { id: "1", label: "Username", infoText: "UserName" },
@@ -27,7 +33,9 @@ const ProfileView = () => {
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(initialData);
-  const [refreshing, setRefreshing] = useState(false); // Step 1: Define a refreshing state
+  const [refreshing, setRefreshing] = useState(false);
+  const defaultProfilePic = "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+  const defaultUserName = "Unknown User";
   const scrollY = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -71,9 +79,9 @@ const ProfileView = () => {
   }, [profile]);
 
   const handleRefresh = async () => {
-    setRefreshing(true); // Step 2: Set refreshing to true when refresh starts
+    setRefreshing(true); //Set refreshing to true when refresh starts
     await loadProfile(); // Reload profile data
-    setRefreshing(false); // Step 3: Set refreshing to false once data is loaded
+    setRefreshing(false); //Set refreshing to false once data is loaded
   };
 
   if (isLoading) {
@@ -84,21 +92,21 @@ const ProfileView = () => {
     );
   }
 
-  const profileHeight = scrollY.interpolate({
-    inputRange: [0, 300],
-    outputRange: [260, 0],
-    extrapolate: "clamp",
-  });
-
-  const profileOpacity = scrollY.interpolate({
-    inputRange: [0, 300],
-    outputRange: [1, 0],
-    extrapolate: "clamp",
-  });
+  const handleLogOut = () => {
+    logout()
+      .then(() => {
+        // <NavigationContainer>
+        //     <AuthStackNavigation />
+        // </NavigationContainer>
+        <AuthStackNavigation />
+      })
+      .catch((error) => alert(error.message.toString()));
+  }
 
   return (
-
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -120,25 +128,36 @@ const ProfileView = () => {
       <Animated.View
         style={[
           styles.profileContainer,
-          { height: profileHeight, opacity: profileOpacity },
+          {
+            height: scrollY.interpolate({
+              inputRange: [0, 200],
+              outputRange: [250, 100],
+              extrapolate: 'clamp',
+            }),
+            opacity: scrollY.interpolate({
+              inputRange: [0, 200],
+              outputRange: [1, 0],
+              extrapolate: 'clamp',
+            }),
+          },
         ]}>
         <View style={styles.profile}>
           <Image
-            source={{ uri: profile.profile_pic }}
+            source={{ uri: profile != null ? profile.profile_pic : defaultProfilePic }}
             style={styles.profileImage}
           />
-          <Text style={styles.username}>{profile.name}</Text>
-          <Text style={styles.userHandle}>{profile.user_name}</Text>
+          <Text style={styles.username}>{profile != null ? profile.name : defaultUserName}</Text>
+          <Text style={styles.userHandle}>{profile != null ? profile.user_name : defaultUserName}</Text>
 
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
             <Text
               style={
-                profile != null && profile.is_online === "true"
+                profile != null && profile.is_online
                   ? styles.onlineStatusText
                   : styles.offlineStatusText
               }>
-              {profile != null && profile.is_online === "true"
+              {profile != null && profile.is_online
                 ? "Online"
                 : "Offline"}
             </Text>
@@ -156,13 +175,23 @@ const ProfileView = () => {
             </View>
           )}
           keyExtractor={(item) => item.id}
-          onRefresh={handleRefresh} // Refresh function
-          refreshing={refreshing} // Step 4: Bind refreshing state to FlatList's refreshing prop
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
             { useNativeDriver: false }
           )}
           scrollEventThrottle={16}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={10}
+        />
+        <ReusableButton
+          text="Log Out"
+          backgroundColor={GlobalStyles.SIGNIN1_BUTTON_COLOR}
+          textColor="#FFFFFF" // or any other color you prefer
+          onPress={handleLogOut}
+          topval={0} // adjust top value as needed
         />
       </View>
     </SafeAreaView>

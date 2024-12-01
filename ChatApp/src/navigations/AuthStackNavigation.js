@@ -4,26 +4,26 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import OnBoardingScreen from "../screens/OnBoardingScreen";
 // import HomeDrawerNavigation from './HomeDrawerNavigation';
-// import HomeStackNavigation from './HomeStackNavigation';
+import HomeStackNavigation from './HomeStackNavigation';
 import ForgetPassword from "../screens/ForgotPasswordScreen";
-import ChatListScreen from "../screens/ChatListScreen";
-// import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
-import ChatScreen from "../screens/ChatScreen";
-// import ProfileScreen from '../screens/ChatScreen';
-import BottomTabNavigation from "./BottomTabNavigation";
-import EditProfileScreen from "../screens/EditProfileScreen";
-import UserListScreen from "../screens/UserListScreen";
+// import ChatListScreen from "../screens/ChatListScreen";
+// // import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
+// import ChatScreen from "../screens/ChatScreen";
+// // import ProfileScreen from '../screens/ChatScreen';
+// import BottomTabNavigation from "./BottomTabNavigation";
+// import EditProfileScreen from "../screens/EditProfileScreen";
+// import UserListScreen from "../screens/UserListScreen";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
-import AllUserScreen from "../screens/AllUserListScreen";
-// import HomeScreen from '../screens/HomeScreen';
-import GroupListScreen from "../screens/GroupListScreen";
-import CreateGroup from "../screens/CreateGroup";
-import GroupDetailsScreen from "../screens/GroupDetailScreen";
-import AddMemberScreen from "../screens/AddMemberScreen";
+// import AllUserScreen from "../screens/AllUserListScreen";
+// // import HomeScreen from '../screens/HomeScreen';
+// import GroupListScreen from "../screens/GroupListScreen";
+// import CreateGroup from "../screens/CreateGroup";
+// import GroupDetailsScreen from "../screens/GroupDetailScreen";
+// import AddMemberScreen from "../screens/AddMemberScreen";
 
-import UserProfileScreen from "../screens/UserProfileScreen";
-import ProfilePicView from "../screens/ProfilePicView";
-import GroupChatScreen from "../screens/GroupChatScreen";
+// import UserProfileScreen from "../screens/UserProfileScreen";
+// import ProfilePicView from "../screens/ProfilePicView";
+// import GroupChatScreen from "../screens/GroupChatScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,13 +51,18 @@ const AuthStackNavigation = () => {
                 options={{ headerShown: false }}
             />
             <Stack.Screen
+                name="CreateProfileScreen"
+                component={CreateProfileScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
                 name="Home"
-                component={BottomTabNavigation}
+                component={HomeStackNavigation}
                 options={{ headerShown: false }}
             />
             {/* <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true }} /> */}
             {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="Chat"
                 component={ChatScreen}
                 options={{ headerShown: false }}
@@ -116,7 +121,7 @@ const AuthStackNavigation = () => {
                 name="GroupChatScreen"
                 component={GroupChatScreen}
                 options={{ headerShown: true }}
-            />
+            /> */}
 
         </Stack.Navigator>
 

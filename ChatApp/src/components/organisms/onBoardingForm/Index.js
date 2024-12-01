@@ -4,11 +4,11 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StyleSheet,
   Dimensions,
   ImageBackground,
   StatusBar,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../onBoardingForm/Styles";
 
 // Import ReusableButton component
@@ -19,10 +19,11 @@ const OnBoradingForm = ({ navigation }) => {
     <ImageBackground
       source={require("../../../../assets/background.png")} // Replace with your background image path
       style={styles.backgroundImage} // Add a new style for background
-      // resizeMode="cover" // Optional: make sure the image covers the whole area
+    // resizeMode="cover" // Optional: make sure the image covers the whole area
     >
-      <StatusBar barStyle="light-content" />
-      <View style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
+      <SafeAreaView style={styles.container}>
         <View style={styles.logoContainer}>
           <Image
             source={require("../../../../assets/AppIcon/SpringTalkIcon.png")}
@@ -38,33 +39,6 @@ const OnBoradingForm = ({ navigation }) => {
           family.
         </Text>
 
-        <View style={styles.socialButtonsContainer}>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={require("../../../../assets/facebook.png")}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={require("../../../../assets/google.png")}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={require("../../../../assets/apple.png")}
-              style={styles.socialIcon}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.orContainer}>
-          <View style={styles.line} />
-          <Text style={styles.orText}>or</Text>
-          <View style={styles.line} />
-        </View>
-
         <TouchableOpacity>
           <ReusableButton
             text="Sign up with mail"
@@ -76,6 +50,12 @@ const OnBoradingForm = ({ navigation }) => {
           />
         </TouchableOpacity>
 
+        <View style={styles.orContainer}>
+          <View style={styles.line} />
+          <Text style={styles.orText}>or</Text>
+          <View style={styles.line} />
+        </View>
+
         <TouchableOpacity
           style={styles.loginTextContainer}
           onPress={() => navigation.navigate("Login")}>
@@ -83,7 +63,7 @@ const OnBoradingForm = ({ navigation }) => {
             Existing account? <Text style={styles.loginLink}>Log in</Text>
           </Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 };

@@ -32,11 +32,8 @@ const UpdateProfileScreen = () => {
   const [name, setName] = useState(profile.name || "");
   const [bio, setBio] = useState(profile.bio || "");
   const [phone, setPhone] = useState(profile.phone || "");
-  const [profilePic, setProfilePic] = useState(
-    profile.profilePic ||
-    "https://t3.ftcdn.net/jpg/06/87/23/04/360_F_687230468_RE94FphpxaiYC0mzkBVflRGg16JC1lNG.jpg"
-  );
-  const [isOnline, setIsOnline] = useState(true);
+  const [profilePic, setProfilePic] = useState(profile.profile_pic);
+  const [isOnline, setIsOnline] = useState(profile.is_online);
   const [isLoading, setIsLoading] = useState(false);
 
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -231,7 +228,7 @@ const UpdateProfileScreen = () => {
             placeholder="Enter your name"
             placeholderTextColor="#888"
           />
-          <Text style={styles.userHandle}>@{name}</Text>
+          <Text style={styles.userHandle}>{profile.email}</Text>
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
             <View style={styles.statusToggleContainer}>

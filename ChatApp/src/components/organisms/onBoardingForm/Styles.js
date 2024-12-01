@@ -90,6 +90,7 @@ export default StyleSheet.create({
   },
 
   orContainer: {
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     marginVertical: GlobalStyles.ONBOARDING_TITLE1_MARGIN,

@@ -1,13 +1,17 @@
 import { collection, query, where, onSnapshot, getDocs, doc, orderBy, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase';
-import { auth} from '../firebase/firebase';
+import { auth } from '../firebase/firebase';
 
 export class GroupRepository {
     // Fetch all groups with real-time updates, including members and messages subcollections
+
     getAllGroups(callback) {
         try {
+            // Create a query to order by lastmsg_time in descending order
+            const groupsQuery = query(collection(firestore, "Groups"), orderBy("lastmsg_time", "desc"));
+
             // Listen for real-time updates on the Groups collection
-            const unsubscribe = onSnapshot(collection(firestore, "Groups"), async (querySnapshot) => {
+            const unsubscribe = onSnapshot(groupsQuery, async (querySnapshot) => {
                 // Map over each document and get its data along with subcollections
                 const groups = await Promise.all(querySnapshot.docs.map(async (doc) => {
                     const groupData = { id: doc.id, ...doc.data() };

@@ -4,6 +4,7 @@ import GetAllUsers from '../../../domain/GetAllUsers'; // Import the hook to fet
 import GroupRepository from '../../../data/GroupRepository';  // Import GroupRepository to handle real-time updates
 import styles from './style'; // Import styles
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GroupDetailsScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -26,7 +27,7 @@ const GroupDetailsScreen = ({ route }) => {
 
         try {
             // Simulate data fetching or use Firebase fetching logic
-            const updatedUsers = await GetAllUsers().users; // Fetch updated user data
+            const updatedUsers = GetAllUsers().users; // Fetch updated user data
             setRefreshedUsers(updatedUsers); // Update state with refreshed data
         } catch (err) {
             console.error("Error refreshing user data:", err);
@@ -73,7 +74,11 @@ const GroupDetailsScreen = ({ route }) => {
     );
 
     if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="medium" color="#0000ff" />
+            </View>
+        );
     }
 
     if (error) {
@@ -81,8 +86,9 @@ const GroupDetailsScreen = ({ route }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ScrollView
+                contentContainerStyle={{ paddingBottom: 100 }}
                 refreshControl={
                     <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
                 }
@@ -125,7 +131,7 @@ const GroupDetailsScreen = ({ route }) => {
             >
                 <Text style={styles.addButtonText}>Add Member</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 

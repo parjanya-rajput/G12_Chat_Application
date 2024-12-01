@@ -3,17 +3,14 @@ import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import { auth } from '../../../firebase/firebase';
-import { GetOrCreateConversation } from '../../../domain/GetOrCreateConversation';
+// import { GetOrCreateConversation } from '../../../domain/GetOrCreateConversation';
 import styles from './style';
 import { GetUserByUserId } from '../../../domain/GetUserByUserId';
-
 import { firestore } from '../../../firebase/firebase'; // Import the firestore object correctly
 import { getDoc, doc, deleteDoc, collection, getDocs, query } from 'firebase/firestore';
 import { FontAwesome } from '@expo/vector-icons';
 import { Modal } from 'react-native';
-
 
 const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     const navigation = useNavigation();
@@ -22,44 +19,10 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
     const senderId = item.participant_ids.find(id => id !== currentUserId);
     const [isLoading, setIsLoading] = useState(true);
-
-
+    const defaultProfilePic = "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+    const defaultUserName = "Unknown User";
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false); // State for full-screen image view
-
-    // useEffect(() => {
-    //     const fetchSenderProfile = async () => {
-    //         try {
-    //             if (senderId) {
-    //                 const userProfile = await GetUserByUserId.execute(senderId);
-    //                 setSenderProfile(userProfile);
-    //             }
-    //         } catch (error) {
-    //             console.error("Failed to fetch sender profile:", error);
-    //         }
-    //     };
-
-    //     fetchSenderProfile();
-    //     setIsLoading(false);
-    //     // console.log("ChatList" + senderProfile)
-    // }, [senderId]);
-
-    // useEffect(() => {
-    //     const fetchSenderProfile = async () => {
-    //         try {
-    //             if (senderId) {
-    //                 const userProfile = await GetUserByUserId.execute(senderId);
-    //                 setSenderProfile(userProfile);
-    //             }
-    //         } catch (error) {
-    //             console.error("Failed to fetch sender profile:", error);
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-
-    //     fetchSenderProfile();
-    // }, [senderId]);
 
     useEffect(() => {
         const fetchSenderProfile = async () => {
@@ -96,7 +59,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     // const handleDeleteConversation = (db, conversationId, callback) => {
     //     // Reference the specific conversation document
     //     const conversationRef = doc(db, "conversation", conversationId);
-    
+
     //     // Set up a real-time listener to ensure the conversation exists before deletion
     //     const unsubscribe = onSnapshot(
     //         conversationRef,
@@ -126,7 +89,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     //             if (callback) callback(error, null); // Invoke callback on listener error
     //         }
     //     );
-    
+
     //     // Return unsubscribe function to allow manual cleanup
     //     return unsubscribe;
     // };
@@ -137,21 +100,21 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
                 console.error("Conversation ID is invalid");
                 return;
             }
-    
+
             // Reference to the conversation document
             const conversationRef = doc(firestore, 'conversation', conversationId);
-    
+
             // Check if the conversation exists
             const conversationDoc = await getDoc(conversationRef);
             if (!conversationDoc.exists()) {
                 console.error("Conversation not found.");
                 return;
             }
-    
+
             // Reference to the messages sub-collection under the conversation
             const messagesRef = collection(conversationRef, 'messages');
             const messagesSnapshot = await getDocs(messagesRef);
-    
+
             if (!messagesSnapshot.empty) {
                 const deleteMessagesPromises = messagesSnapshot.docs.map(doc => deleteDoc(doc.ref));
                 // Wait for all messages to be deleted
@@ -160,7 +123,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
             } else {
                 console.log('No messages to delete');
             }
-    
+
             // Now delete the conversation document itself
             await deleteDoc(conversationRef);
             console.log('Conversation and all its messages deleted successfully.');
@@ -179,7 +142,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
     // Right-side actions (Delete and Mute Notification)
     const renderRightActions = (progress, dragX) => (
         <View style={styles.rightActions}>
-            <TouchableOpacity style={styles.actionButton} onPress={()=>{DeleteConversation(item.id)}} >
+            <TouchableOpacity style={styles.actionButton} onPress={() => { DeleteConversation(item.id) }} >
                 <Icon name="delete" size={25} color="#ff3b30" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
@@ -196,7 +159,6 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
             </TouchableOpacity>
         </View>
     );
-
     const startChat = async (userId) => {
         // if (!currentUserId) { // Check if user is logged in
         //     alert("You need to be logged in to chat");
@@ -204,6 +166,10 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
         // }
         // const conversationId = await GetOrCreateConversation.execute(currentUserId, userId);
         // console.log(conversationId);
+        if (senderProfile == null) {
+            alert("User has deactivated the account");
+            return;
+        }
         navigation.navigate("Chat", { item: senderProfile, conversationId: item.id });
     };
 
@@ -242,7 +208,7 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
                     onPress={() => setIsModalVisible(true)}
                 >
                     <View style={styles.imageWrapper}>
-                        <Image source={{ uri: senderProfile.profile_pic }} style={styles.profileImage} />
+                        <Image source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }} style={styles.profileImage} />
                     </View>
                 </TouchableOpacity>
 
@@ -251,34 +217,34 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
                     style={styles.textContainer}
                     onPress={() => startChat(item.id)}
                 >
-                    <Text style={styles.username}>{senderProfile.name}</Text>
-                    <Text style={styles.status}>{item.last_message}</Text>
+                    <Text style={styles.username}>{senderProfile != null ? senderProfile.name : defaultUserName}</Text>
+                    <Text style={styles.status}>{item ? (item.last_message.length > 50 ? item.last_message.substring(0, 47) + '...' : item.last_message) : "Conversation doesn't exist!"}</Text>
                 </TouchableOpacity>
 
 
                 {/* Partial-Screen Modal */}
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={handleCloseModal}
-            
-            >
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            onPress={closePartial}
-                            style={styles.closeButton}
-                        >
-                            <FontAwesome name="close" size={24} color="#fff" />
-                        </TouchableOpacity>
-                        <Image
-                            source={{ uri: senderProfile.profile_pic }}
-                            style={styles.modalImage}
-                            resizeMode="contain"
-                        />
-                        <Text style={styles.modalName}>{senderProfile.name}</Text>
-                        {/* <TouchableOpacity
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={isModalVisible}
+                    onRequestClose={handleCloseModal}
+
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                onPress={closePartial}
+                                style={styles.closeButton}
+                            >
+                                <FontAwesome name="close" size={24} color="#fff" />
+                            </TouchableOpacity>
+                            <Image
+                                source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }}
+                                style={styles.modalImage}
+                                resizeMode="contain"
+                            />
+                            <Text style={styles.modalName}>{senderProfile != null ? senderProfile.name : defaultUserName}</Text>
+                            {/* <TouchableOpacity
                             style={styles.fullScreenButton}
                             onPress={() => {
                                 setIsModalVisible(false);
@@ -287,31 +253,31 @@ const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
                         >
                             <Text style={styles.fullScreenText}>View Full Screen</Text>
                         </TouchableOpacity> */}
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
 
-            {/* Full-Screen Modal */}
-            <Modal
-                animationType="fade"
-                visible={isFullScreen}
-                transparent={true}
-                onRequestClose={handleCloseModal}
-            >
-                <View style={styles.fullScreenOverlay}>
-                    <TouchableOpacity
-                        onPress={closeFull}
-                        style={styles.closeButtonFullScreen}
-                    >
-                        <FontAwesome name="close" size={30} color="#fff" />
-                    </TouchableOpacity>
-                    <Image
-                        source={{ uri: senderProfile.profile_pic }}
-                        style={styles.fullScreenImage}
-                        resizeMode="contain"
-                    />
-                </View>
-            </Modal>
+                {/* Full-Screen Modal */}
+                <Modal
+                    animationType="fade"
+                    visible={isFullScreen}
+                    transparent={true}
+                    onRequestClose={handleCloseModal}
+                >
+                    <View style={styles.fullScreenOverlay}>
+                        <TouchableOpacity
+                            onPress={closeFull}
+                            style={styles.closeButtonFullScreen}
+                        >
+                            <FontAwesome name="close" size={30} color="#fff" />
+                        </TouchableOpacity>
+                        <Image
+                            source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }}
+                            style={styles.fullScreenImage}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </Modal>
             </View>
         </Swipeable>
     );

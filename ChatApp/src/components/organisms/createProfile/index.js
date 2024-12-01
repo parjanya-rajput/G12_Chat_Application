@@ -22,6 +22,7 @@ import { ProfileCreate } from "../../../domain/Profile";
 
 import { useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+import HomeStackNavigation from "../../../navigations/HomeStackNavigation";
 
 const CLOUD_NAME = "daayhy7z8";
 const UPLOAD_PRESET = "g12-chat-app";
@@ -179,7 +180,7 @@ const CreateProfile = () => {
 
   const handleEmailFieldPress = () => {
     Alert.alert("Uneditable Field", "This field cannot be edited.", [
-      { text: "OK", onPress: () => {} },
+      { text: "OK", onPress: () => { } },
     ]);
   };
 
@@ -187,7 +188,6 @@ const CreateProfile = () => {
     setIsLoading(true);
 
     try {
-      await ProfileCreate.execute({ name, bio, phone, profilePic, isOnline });
       if (!name || !bio || !phone) {
         alert("Please fill all the fields.");
         setIsLoading(false);
@@ -209,7 +209,7 @@ const CreateProfile = () => {
       });
       setIsLoading(false);
       alert("Profile created successfully!");
-      navigation.navigate("Home");
+      navigation.replace("Home");
     } catch (error) {
       alert(error.message);
     }

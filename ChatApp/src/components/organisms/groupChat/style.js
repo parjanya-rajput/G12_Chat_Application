@@ -1,7 +1,11 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white', paddingTop: 40, },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
+  container: { flex: 1, backgroundColor: 'white' },
   header: { flexDirection: 'row', padding: 10, alignItems: 'center' },
   profilePic: { width: 40, height: 40, borderRadius: 20 },
   profileName: { fontSize: 18, fontWeight: 'bold' },
@@ -9,8 +13,6 @@ const styles = StyleSheet.create({
   headerContent: { flexDirection: 'column', marginLeft: 10 },
   headerIcons: { flexDirection: 'row', marginLeft: 'auto' },
   searchButton: { marginRight: 10 },
-  audiocallButton: { marginRight: 10 },
-  videocallButton: { marginRight: 10 },
   chatMessages: { flex: 1 },
   messagesContainer: { padding: 20, justifyContent: 'center', alignItems: 'center' },
   noMessages: { fontSize: 18, color: '#888' },

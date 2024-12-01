@@ -1,10 +1,8 @@
 import { StyleSheet, Dimensions } from "react-native";
-const { height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#000",
-    marginTop: 0.05 * height,
   },
   header: {
     flexDirection: "row",

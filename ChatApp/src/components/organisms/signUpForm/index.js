@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Text } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +15,7 @@ import { signIn } from "../../../firebase/authService";
 import { validateEmail } from "../../../helper/validateEmail";
 import { validatePassword } from "../../../helper/validatePassword";
 import CustomInput from "../../atoms/InputField";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SignUpForm = () => {
   const navigation = useNavigation();
@@ -60,14 +61,14 @@ const SignUpForm = () => {
             // Display a toast message
             alert(
               "Verification email sent to: " +
-                user.email +
-                ". Please verify your email to login."
+              user.email +
+              ". Please verify your email to login."
             );
-            setIsLoading(false); // Navigate to Home after sign up
           }
         })
         .catch((error) => alert(error.message));
     }
+    setIsLoading(false);
   };
 
   //Used for debugging
@@ -96,7 +97,8 @@ const SignUpForm = () => {
     );
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <Text style={styles.title}>Sign up with email</Text>
       <Text style={styles.subtitle}>
         Get chatting with friends and family today by signing up for our chat
@@ -121,7 +123,7 @@ const SignUpForm = () => {
         keyboardType="email-address" // Set keyboard type for email input
         autoCapitalize="none" // Disable auto-capitalization for email
         leftIconName="email" // Set the left icon to "email"
-        errorMessage={isEmailValid ? "" : "Invalid email format"} // Show error if email is invalid
+        errorMessage={!isEmailValid && email ? "Invalid email format" : ""} // Show error if email is invalid
         style={{ fontFamily: "cretype-caros" }}
       />
 
@@ -161,7 +163,7 @@ const SignUpForm = () => {
           textContentType="oneTimeCode" // Prevent keyboard suggestions
           leftIconName="lock" // Set the left icon to "lock"
           errorMessage={
-            validatePassword(password) || confirmPassword === password
+            validatePassword(confirmPassword) || confirmPassword === password
               ? ""
               : "Password must be at least 8 characters"
           } // Show error if passwords don't match or are invalid
@@ -191,7 +193,7 @@ const SignUpForm = () => {
         topval={0} // adjust top value as needed
         disabled={!isFormValid}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

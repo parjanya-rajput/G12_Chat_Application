@@ -1,0 +1,211 @@
+{
+  "info": {
+    "_postman_id": "cda90073-ae99-4a55-bfd1-4ec00a9b0b50",
+    "name": "SpringTalk API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39795315"
+  },
+  "item": [
+    {
+      "name": "TC_API_001 (Successful Image Upload)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "DWkqrRDAH/image.jpg"
+            },
+            {
+              "key": "upload_preset",
+              "value": "g12-chat-app",
+              "type": "text"
+            },
+            {
+              "key": "cloud_name",
+              "value": "daayhy7z8",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://api.cloudinary.com/v1_1/daayhy7z8/image/upload?Content-Type=multipart/form-data",
+          "protocol": "https",
+          "host": ["api", "cloudinary", "com"],
+          "path": ["v1_1", "daayhy7z8", "image", "upload"],
+          "query": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid File Type Upload (TC_API_002)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "dgo3VHVu4/textfile.jpg.txt"
+            },
+            {
+              "key": "upload_preset",
+              "value": "g12-chat-app",
+              "type": "text"
+            },
+            {
+              "key": "cloud_name",
+              "value": "daayhy7z8",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://api.cloudinary.com/v1_1/daayhy7z8/image/upload?Content-Type=multipart/form-data",
+          "protocol": "https",
+          "host": ["api", "cloudinary", "com"],
+          "path": ["v1_1", "daayhy7z8", "image", "upload"],
+          "query": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Missing Required Parameters (TC_API_003)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "WogyPrzzJ/image.jpg"
+            },
+            {
+              "key": "upload_preset",
+              "value": "g12-chat-app",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "cloud_name",
+              "value": "daayhy7z8",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://api.cloudinary.com/v1_1/daayhy7z8/image/upload?Content-Type=multipart/form-data",
+          "protocol": "https",
+          "host": ["api", "cloudinary", "com"],
+          "path": ["v1_1", "daayhy7z8", "image", "upload"],
+          "query": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Large File Upload (TC_API_004)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "aXSf6EC8_/largeImage.jpg"
+            },
+            {
+              "key": "upload_preset",
+              "value": "g12-chat-app",
+              "type": "text"
+            },
+            {
+              "key": "cloud_name",
+              "value": "daayhy7z8",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://api.cloudinary.com/v1_1/daayhy7z8/image/upload?Content-Type=multipart/form-data",
+          "protocol": "https",
+          "host": ["api", "cloudinary", "com"],
+          "path": ["v1_1", "daayhy7z8", "image", "upload"],
+          "query": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid Authentication (TC_API_005)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": ["IrN12YJgJ/image.jpg", "IrN12YJgJ/image2.jpg"]
+            },
+            {
+              "key": "upload_preset",
+              "value": "g12-chat-app",
+              "type": "text"
+            },
+            {
+              "key": "cloud_name",
+              "value": "daayhy7z8",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://api.cloudinary.com/v1_1/daayhy7z88/image/upload?Content-Type=multipart/form-data",
+          "protocol": "https",
+          "host": ["api", "cloudinary", "com"],
+          "path": ["v1_1", "daayhy7z88", "image", "upload"],
+          "query": [
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,10 +1,15 @@
 // LoginForm.js
-import React, { useState } from 'react';
-import { View, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Text } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import {
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  StatusBar,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Text } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
 
 // Import styles and reusable components
 import GlobalStyles from "../../globalStyles";
@@ -16,7 +21,7 @@ import { signIn } from "../../../firebase/authService";
 import { validateEmail } from "../../../helper/validateEmail";
 import { validatePassword } from "../../../helper/validatePassword";
 import CustomInput from "../../atoms/InputField";
-import HomeStackNavigation from '../../../navigations/HomeStackNavigation';
+import HomeStackNavigation from "../../../navigations/HomeStackNavigation";
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -40,27 +45,31 @@ const LoginForm = () => {
         if (user) {
           if (user.emailVerified) {
             <HomeStackNavigation />;
-          }
-          else alert('Please verify your email address before signing in');
+          } else alert("Please verify your email address before signing in");
         } else {
-          alert('User not found');
+          alert("User not found");
         }
+        setIsLoading(false);
       })
       .catch((error) => alert(error.message.toString()));
     setIsLoading(false);
   };
 
   if (isLoading) {
-    // Show a loading indicator while Firebase is checking the auth state
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Text style={styles.title}>Log in to Chatbox</Text>
       <Text style={styles.subtitle}>
         Welcome back! Sign in using your social account or email to continue us
@@ -116,7 +125,7 @@ const LoginForm = () => {
         disabled={!isFormValid}
       />
 
-      <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+      <TouchableOpacity onPress={() => navigation.navigate("ForgetPassword")}>
         <Text style={styles.forgotPasswordText}>Forgot password?</Text>
       </TouchableOpacity>
     </SafeAreaView>

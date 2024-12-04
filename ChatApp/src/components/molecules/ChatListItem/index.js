@@ -1,288 +1,214 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Swipeable } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { auth } from '../../../firebase/firebase';
-// import { GetOrCreateConversation } from '../../../domain/GetOrCreateConversation';
-import styles from './style';
-import { GetUserByUserId } from '../../../domain/GetUserByUserId';
-import { firestore } from '../../../firebase/firebase'; // Import the firestore object correctly
-import { getDoc, doc, deleteDoc, collection, getDocs, query } from 'firebase/firestore';
-import { FontAwesome } from '@expo/vector-icons';
-import { Modal } from 'react-native';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  Modal,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Swipeable } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { auth, firestore } from "../../../firebase/firebase";
+import {
+  doc,
+  deleteDoc,
+  collection,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
+import styles from "./style";
+import { FontAwesome } from "@expo/vector-icons";
+import { GetUserByUserId } from "../../../domain/GetUserByUserId";
 
 const ChatListItem = ({ item, conversation, onSwipeOpen }) => {
-    const navigation = useNavigation();
-    const swipeableRef = useRef(null);
-    const [senderProfile, setSenderProfile] = useState(null);
-    const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
-    const senderId = item.participant_ids.find(id => id !== currentUserId);
-    const [isLoading, setIsLoading] = useState(true);
-    const defaultProfilePic = "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
-    const defaultUserName = "Unknown User";
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false); // State for full-screen image view
+  const navigation = useNavigation();
+  const swipeableRef = useRef(null);
+  const [senderProfile, setSenderProfile] = useState(null);
+  const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
+  const senderId = item.participant_ids.find((id) => id !== currentUserId);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const defaultProfilePic =
+    "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+  const defaultUserName = "Unknown User";
 
-    useEffect(() => {
-        const fetchSenderProfile = async () => {
-            try {
-                if (senderId) {
-                    // Fetch user profile initially
-                    const userProfile = await GetUserByUserId.execute(senderId);
-                    setSenderProfile(userProfile);
+  useEffect(() => {
+    const fetchSenderProfile = async () => {
+      try {
+        if (senderId) {
+          const userProfile = await GetUserByUserId.execute(senderId);
+          setSenderProfile(userProfile);
 
-                    // Set up real-time listener for user profile updates
-                    GetUserByUserId.listenToUserUpdates(senderId, (updatedProfile) => {
-                        if (updatedProfile) {
-                            setSenderProfile(updatedProfile);
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error("Failed to fetch sender profile:", error);
-            } finally {
-                setIsLoading(false);
+          GetUserByUserId.listenToUserUpdates(senderId, (updatedProfile) => {
+            if (updatedProfile) {
+              setSenderProfile(updatedProfile);
             }
-        };
-
-        fetchSenderProfile();
-
-        // Cleanup on component unmount
-        return () => {
-            setSenderProfile(null);
-            setIsLoading(true);
-        };
-    }, [senderId]);
-
-
-    // const handleDeleteConversation = (db, conversationId, callback) => {
-    //     // Reference the specific conversation document
-    //     const conversationRef = doc(db, "conversation", conversationId);
-
-    //     // Set up a real-time listener to ensure the conversation exists before deletion
-    //     const unsubscribe = onSnapshot(
-    //         conversationRef,
-    //         (docSnapshot) => {
-    //             if (docSnapshot.exists()) {
-    //                 // Conversation exists, proceed to delete
-    //                 deleteDoc(conversationRef)
-    //                     .then(() => {
-    //                         console.log(`Conversation ${conversationId} deleted successfully.`);
-    //                         if (callback) callback(null, conversationId); // Invoke callback on success
-    //                     })
-    //                     .catch((error) => {
-    //                         console.error("Error deleting conversation:", error);
-    //                         if (callback) callback(error, null); // Invoke callback on error
-    //                     })
-    //                     .finally(() => {
-    //                         unsubscribe(); // Unsubscribe after deletion
-    //                     });
-    //             } else {
-    //                 console.log(`Conversation ${conversationId} does not exist.`);
-    //                 if (callback) callback(new Error("Conversation not found"), null);
-    //                 unsubscribe(); // Unsubscribe if no document is found
-    //             }
-    //         },
-    //         (error) => {
-    //             console.error("Error listening to conversation:", error);
-    //             if (callback) callback(error, null); // Invoke callback on listener error
-    //         }
-    //     );
-
-    //     // Return unsubscribe function to allow manual cleanup
-    //     return unsubscribe;
-    // };
-
-    const handleDeleteConversation = async (conversationId) => {
-        try {
-            if (!conversationId) {
-                console.error("Conversation ID is invalid");
-                return;
-            }
-
-            // Reference to the conversation document
-            const conversationRef = doc(firestore, 'conversation', conversationId);
-
-            // Check if the conversation exists
-            const conversationDoc = await getDoc(conversationRef);
-            if (!conversationDoc.exists()) {
-                console.error("Conversation not found.");
-                return;
-            }
-
-            // Reference to the messages sub-collection under the conversation
-            const messagesRef = collection(conversationRef, 'messages');
-            const messagesSnapshot = await getDocs(messagesRef);
-
-            if (!messagesSnapshot.empty) {
-                const deleteMessagesPromises = messagesSnapshot.docs.map(doc => deleteDoc(doc.ref));
-                // Wait for all messages to be deleted
-                await Promise.all(deleteMessagesPromises);
-                console.log('All messages deleted');
-            } else {
-                console.log('No messages to delete');
-            }
-
-            // Now delete the conversation document itself
-            await deleteDoc(conversationRef);
-            console.log('Conversation and all its messages deleted successfully.');
-            alert('Conversation and all its messages deleted successfully.');
-        } catch (error) {
-            console.error('Error deleting conversation:', error);
-            alert('Error deleting conversation.');
+          });
         }
+      } catch (error) {
+        console.error("Failed to fetch sender profile:", error);
+      }
     };
 
+    fetchSenderProfile();
 
-    const DeleteConversation = (conversationId) => {
-        handleDeleteConversation(conversationId);
+    return () => {
+      setSenderProfile(null);
     };
+  }, [senderId]);
 
-    // Right-side actions (Delete and Mute Notification)
-    const renderRightActions = (progress, dragX) => (
-        <View style={styles.rightActions}>
-            <TouchableOpacity style={styles.actionButton} onPress={() => { DeleteConversation(item.id) }} >
-                <Icon name="delete" size={25} color="#ff3b30" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-                <Icon name="bell-off" size={25} color="#ffcc00" />
-            </TouchableOpacity>
-        </View>
-    );
+  const handleDeleteConversation = async (conversationId) => {
+    try {
+      setIsLoading(true);
 
-    // Left-side action (Archive)
-    const renderLeftActions = (progress, dragX) => (
-        <View style={styles.leftActions}>
-            <TouchableOpacity style={styles.actionButton}>
-                <Icon name="archive" size={25} color="#757575" />
-            </TouchableOpacity>
-        </View>
-    );
-    const startChat = async (userId) => {
-        // if (!currentUserId) { // Check if user is logged in
-        //     alert("You need to be logged in to chat");
-        //     return;
-        // }
-        // const conversationId = await GetOrCreateConversation.execute(currentUserId, userId);
-        // console.log(conversationId);
-        if (senderProfile == null) {
-            alert("User has deactivated the account");
-            return;
-        }
-        navigation.navigate("Chat", { item: senderProfile, conversationId: item.id });
-    };
+      // Reference to the conversation document
+      const conversationRef = doc(firestore, "conversation", conversationId);
+      const conversationDoc = await getDoc(conversationRef);
+      if (!conversationDoc.exists()) {
+        console.error("Conversation not found.");
+        setIsLoading(false);
+        return;
+      }
 
-    if (isLoading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="small" color="#4A90E2" />
-            </View>
+      // Delete messages if any
+      const messagesRef = collection(conversationRef, "messages");
+      const messagesSnapshot = await getDocs(messagesRef);
+      if (!messagesSnapshot.empty) {
+        const deleteMessagesPromises = messagesSnapshot.docs.map((doc) =>
+          deleteDoc(doc.ref)
         );
+        await Promise.all(deleteMessagesPromises);
+        console.log("All messages deleted");
+      }
+
+      // Delete the conversation document itself
+      await deleteDoc(conversationRef);
+      console.log("Conversation and all its messages deleted successfully.");
+      setIsLoading(false);
+      // Alert.alert("Conversation and all its messages deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+      setIsLoading(false);
+      alert("Error deleting conversation.");
     }
+  };
 
-    const handleCloseModal = () => {
-        setIsModalVisible(false);
-        setIsFullScreen(false);
-    };
+  const DeleteConversation = (conversationId) => {
+    handleDeleteConversation(conversationId);
+  };
 
-    const closePartial = () => {
-        setIsModalVisible(false);
-    };
+  const renderRightActions = (progress, dragX) => (
+    <View style={styles.rightActions}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => {
+          DeleteConversation(item.id);
+        }}>
+        <Icon name="delete" size={25} color="#ff3b30" />
+      </TouchableOpacity>
+      {/* <TouchableOpacity style={styles.actionButton}>
+        <Icon name="bell-off" size={25} color="#ffcc00" />
+      </TouchableOpacity> */}
+    </View>
+  );
 
-    const closeFull = () => {
-        setIsFullScreen(false);
-    };
+  // const renderLeftActions = (progress, dragX) => (
+  //   <View style={styles.leftActions}>
+  //     <TouchableOpacity style={styles.actionButton}>
+  //       <Icon name="archive" size={25} color="#757575" />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 
+  const startChat = async (userId) => {
+    if (senderProfile == null) {
+      alert("User has deactivated the account");
+      return;
+    }
+    navigation.navigate("Chat", {
+      item: senderProfile,
+      conversationId: item.id,
+    });
+  };
 
+  if (isLoading) {
     return (
-        <Swipeable
-            ref={swipeableRef}
-            renderRightActions={renderRightActions}
-            renderLeftActions={renderLeftActions}
-            onSwipeableOpen={() => onSwipeOpen(swipeableRef.current)}
-        >
-            <View style={styles.container}>
-                {/* Profile Image with black background */}
-                <TouchableOpacity
-                    onPress={() => setIsModalVisible(true)}
-                >
-                    <View style={styles.imageWrapper}>
-                        <Image source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }} style={styles.profileImage} />
-                    </View>
-                </TouchableOpacity>
-
-                {/* User Info */}
-                <TouchableOpacity
-                    style={styles.textContainer}
-                    onPress={() => startChat(item.id)}
-                >
-                    <Text style={styles.username}>{senderProfile != null ? senderProfile.name : defaultUserName}</Text>
-                    <Text style={styles.status}>{item ? (item.last_message.length > 50 ? item.last_message.substring(0, 47) + '...' : item.last_message) : "Conversation doesn't exist!"}</Text>
-                </TouchableOpacity>
-
-
-                {/* Partial-Screen Modal */}
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={isModalVisible}
-                    onRequestClose={handleCloseModal}
-
-                >
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                onPress={closePartial}
-                                style={styles.closeButton}
-                            >
-                                <FontAwesome name="close" size={24} color="#fff" />
-                            </TouchableOpacity>
-                            <Image
-                                source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }}
-                                style={styles.modalImage}
-                                resizeMode="contain"
-                            />
-                            <Text style={styles.modalName}>{senderProfile != null ? senderProfile.name : defaultUserName}</Text>
-                            {/* <TouchableOpacity
-                            style={styles.fullScreenButton}
-                            onPress={() => {
-                                setIsModalVisible(false);
-                                setIsFullScreen(true);
-                            }}
-                        >
-                            <Text style={styles.fullScreenText}>View Full Screen</Text>
-                        </TouchableOpacity> */}
-                        </View>
-                    </View>
-                </Modal>
-
-                {/* Full-Screen Modal */}
-                <Modal
-                    animationType="fade"
-                    visible={isFullScreen}
-                    transparent={true}
-                    onRequestClose={handleCloseModal}
-                >
-                    <View style={styles.fullScreenOverlay}>
-                        <TouchableOpacity
-                            onPress={closeFull}
-                            style={styles.closeButtonFullScreen}
-                        >
-                            <FontAwesome name="close" size={30} color="#fff" />
-                        </TouchableOpacity>
-                        <Image
-                            source={{ uri: senderProfile != null ? senderProfile.profile_pic : defaultProfilePic }}
-                            style={styles.fullScreenImage}
-                            resizeMode="contain"
-                        />
-                    </View>
-                </Modal>
-            </View>
-        </Swipeable>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
+  }
+
+  return (
+    <Swipeable
+      ref={swipeableRef}
+      renderRightActions={renderRightActions}
+      // renderLeftActions={renderLeftActions}
+      onSwipeableOpen={() => onSwipeOpen(swipeableRef.current)}>
+      <View style={styles.container}>
+        {/* Profile Image with black background */}
+        <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+          <View style={styles.imageWrapper}>
+            <Image
+              source={{
+                uri: senderProfile
+                  ? senderProfile.profile_pic
+                  : defaultProfilePic,
+              }}
+              style={styles.profileImage}
+            />
+          </View>
+        </TouchableOpacity>
+
+        {/* User Info */}
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={() => startChat(item.id)}>
+          <Text style={styles.username}>
+            {senderProfile ? senderProfile.name : defaultUserName}
+          </Text>
+          <Text style={styles.status}>
+            {item
+              ? item.last_message.length > 50
+                ? item.last_message.substring(0, 47) + "..."
+                : item.last_message
+              : "Conversation doesn't exist!"}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Modal for Profile Image */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                style={styles.closeButton}>
+                <FontAwesome name="close" size={24} color="#fff" />
+              </TouchableOpacity>
+              <Image
+                source={{
+                  uri: senderProfile
+                    ? senderProfile.profile_pic
+                    : defaultProfilePic,
+                }}
+                style={styles.modalImage}
+                resizeMode="contain"
+              />
+              <Text style={styles.modalName}>
+                {senderProfile ? senderProfile.name : defaultUserName}
+              </Text>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </Swipeable>
+  );
 };
-
-
 
 export default ChatListItem;

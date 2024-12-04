@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 20,
     paddingBottom: 100,
+    paddingHorizontal: 10,
   },
   infoCard: {
     backgroundColor: "#f2f2f2",
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginTop: 5,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   scrollViewContent: {
     paddingBottom: 50,

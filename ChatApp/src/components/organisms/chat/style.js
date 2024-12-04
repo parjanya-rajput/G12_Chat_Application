@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   // Chat container
@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
+  },
+  backButton: {
+    padding: 5,
   },
   profilePic: {
     width: 45,
@@ -51,9 +54,9 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: "#f2f2f2",
     paddingLeft: 40, // Add padding for the search icon
   },
   audiocallButton: {
@@ -65,28 +68,28 @@ const styles = StyleSheet.create({
 
   // Message display styles
   messageContainer: {
-    maxWidth: '80%',
+    maxWidth: "80%",
     borderRadius: 10,
     padding: 10,
     marginVertical: 5,
   },
   sentMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#DCF8C6', // Light green for sent messages
+    alignSelf: "flex-end",
+    backgroundColor: "#DCF8C6", // Light green for sent messages
   },
   receivedMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#ECECEC', // Light grey for received messages
+    alignSelf: "flex-start",
+    backgroundColor: "#ECECEC", // Light grey for received messages
   },
   messageText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   timestamp: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginTop: 5,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
 
   // Input section
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
     fontFamily: "cretype-caros",
     flex: 1,
     backgroundColor: "#eaeaea",
@@ -116,10 +119,10 @@ const styles = StyleSheet.create({
   },
   autocompleteButton: {
     padding: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 25,
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
@@ -128,10 +131,10 @@ const styles = StyleSheet.create({
   },
   responseLoader: {
     padding: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 25,
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
@@ -157,117 +160,116 @@ const styles = StyleSheet.create({
     borderRadius: 32,
   },
   sendButton: {
-    backgroundColor: 'white', // Green background for send button
+    backgroundColor: "white", // Green background for send button
     padding: 10,
     borderRadius: 25,
     elevation: 2,
     marginHorizontal: 1,
   },
 
-
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
     width: width * 0.85,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 15,
-    overflow: 'hidden',
-    alignItems: 'center',
+    overflow: "hidden",
+    alignItems: "center",
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 10,
   },
   closeButtonProfile: {
-    alignSelf: 'center',
-    position: 'relative',
+    alignSelf: "center",
+    position: "relative",
     // top: 10,
     // right: 10,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     borderRadius: 60,
     padding: 10,
   },
   modalImage: {
-    width: '100%',
+    width: "100%",
     height: width * 0.85,
   },
   modalName: {
-    fontFamily: 'Caros-Heavy',
+    fontFamily: "Caros-Heavy",
     fontSize: 22,
     // marginVertical: 15,
-    color: '#333',
+    color: "#333",
   },
   fullScreenButton: {
-    backgroundColor: '#609d95',
+    backgroundColor: "#609d95",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
   },
   fullScreenText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
   fullScreenOverlay: {
     flex: 1,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
   },
   fullScreenImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   closeButtonFullScreen: {
-    position: 'relative',
+    position: "relative",
     top: 40,
     right: 20,
-    backgroundColor: 'green',
+    backgroundColor: "green",
     borderRadius: 20,
     padding: 10,
   },
 
   SuggestionBox: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 100,
     left: 20,
     right: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 10,
     padding: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    alignItems: 'center',
+    alignItems: "center",
     zIndex: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   SuggestionBoxText: {
     fontSize: 16,
     marginBottom: 10,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
   },
   closeButton: {
-    backgroundColor: '#609d95',
+    backgroundColor: "#609d95",
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   closeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   backgroundBlur: {
     ...StyleSheet.absoluteFillObject,
@@ -278,27 +280,26 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   okButton: {
-    backgroundColor: '#609d95',
+    backgroundColor: "#609d95",
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
     marginLeft: 20,
   },
 
   okButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   SuggestionBoxButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     marginTop: 10,
   },
-
 });
 
 export default styles;

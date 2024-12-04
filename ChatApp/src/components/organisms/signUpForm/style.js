@@ -43,5 +43,19 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
+  loginText: {
+    fontFamily: "Caros-Medium",
+    textAlign: "center",
+    color: GlobalStyles.SIGNIN1_BUTTON_COLOR,
+    marginTop: 10,
+    textDecorationLine: "underline",
+    paddingTop: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  },
 });
 export default styles;

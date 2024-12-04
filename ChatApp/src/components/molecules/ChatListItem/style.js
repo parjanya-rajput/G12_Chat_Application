@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#f9f9f9",
     borderRadius: 12,
-    marginLeft: 10,
+    marginLeft: 0,
     justifyContent: "center",
   },
   leftActions: {
@@ -72,80 +72,80 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
     width: width * 0.85,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 15,
-    overflow: 'hidden',
-    alignItems: 'center',
+    overflow: "hidden",
+    alignItems: "center",
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 10,
   },
   closeButton: {
-    alignSelf: 'center',
-    position: 'relative',
+    alignSelf: "center",
+    position: "relative",
     // top: 10,
     // right: 10,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     borderRadius: 60,
     padding: 10,
   },
   modalImage: {
-    width: '100%',
+    width: "100%",
     height: width * 0.85,
   },
   modalName: {
-    fontFamily: 'Caros-Heavy',
+    fontFamily: "Caros-Heavy",
     fontSize: 22,
     // marginVertical: 15,
-    color: '#333',
+    color: "#333",
   },
   fullScreenButton: {
-    backgroundColor: '#609d95',
+    backgroundColor: "#609d95",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
   },
   fullScreenText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
   fullScreenOverlay: {
     flex: 1,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
   },
   fullScreenImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   closeButtonFullScreen: {
-    position: 'relative',
+    position: "relative",
     top: 40,
     right: 20,
-    backgroundColor: 'green',
+    backgroundColor: "green",
     borderRadius: 20,
     padding: 10,
   },
   messageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   greenDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'green',
+    backgroundColor: "green",
     marginRight: 5,
   },
 });

@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -67,6 +69,45 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: "#f0f0f0",
     elevation: 2,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: width * 0.85,
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    overflow: "hidden",
+    alignItems: "center",
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  closeButton: {
+    alignSelf: "center",
+    position: "relative",
+    // top: 10,
+    // right: 10,
+    backgroundColor: "#000",
+    borderRadius: 60,
+    padding: 10,
+  },
+  modalImage: {
+    width: "100%",
+    height: width * 0.85,
+  },
+  modalName: {
+    fontFamily: "Caros-Heavy",
+    fontSize: 22,
+    // marginVertical: 15,
+    color: "#333",
   },
 });
 

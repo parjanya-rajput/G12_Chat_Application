@@ -13,9 +13,11 @@ A project for the Software Engineering (IT-314) course, guided by Prof. Saurabh 
 
 ## 🌟 Introduction
 
-The G12 SpringTalk - A Chat Application is designed to provide a seamless and responsive chatting experience. It leverages a modular and scalable architecture combining the *Atomic Design Pattern* and *MVC principles*.
+The G12 SpringTalk - A Chat Application is designed to provide a seamless and responsive chatting experience. It leverages a modular and scalable architecture combining the _Atomic Design Pattern_ and _MVC principles_.
 
-Watch the demo video here: [G12 SprintTalk - A Chat Application Demo Video](https://youtu.be/amOgt-EhnI4)
+Watch the demo video here: [G12 SprintTalk - A Chat Application | Demo Video](https://youtu.be/amOgt-EhnI4)
+<br>
+Download the app here: [G12 SprintTalk - A Chat Application | Download](https://drive.google.com/file/d/1iMVfAD9C3DObcRSB124j0gFhpYVWClNJ/view?usp=sharing)
 
 ## 🛠️ Tech Stack
 
@@ -74,34 +76,34 @@ The application follows a modified MVC (Model-View-Controller) pattern:
 
 ## 🔄 Data Flow
 
-1. *User Interaction*
+1. _User Interaction_
 
    - User interacts with components (atoms/molecules/organisms)
    - Actions are triggered from the UI components
    - For Enhanced Query Suggestions, the user taps the "Enhance" button to get refined suggestions.
 
-2. *Action Processing*
+2. _Action Processing_
 
    - Helper functions process data when needed
    - API calls are made if required
 
-3. *Data Management*
+3. _Data Management_
 
    - Firebase handles real-time data and authentication
    - Domain logic processes business rules
 
-4. *UI Updates*
+4. _UI Updates_
    - Components receive updated data through props or local state
    - Screen components render updated UI
    - Navigation updates if required
 
 ## ✨ Key Features
 
-- *Atomic Design*: Modular and reusable component architecture
-- *Real-time Updates*: Firebase integration for live data
-- *Navigation*: Structured routing system
-- *API Integration*: Organized API communication
-- *Enhanced Query Suggestion*: A feature where users can tap the "Enhance" button while typing, allowing the system to generate refined suggestions (e.g., "happy birthday" → "Wishing you a very joyous birthday filled with laughter and cheer").
+- _Atomic Design_: Modular and reusable component architecture
+- _Real-time Updates_: Firebase integration for live data
+- _Navigation_: Structured routing system
+- _API Integration_: Organized API communication
+- _Enhanced Query Suggestion_: A feature where users can tap the "Enhance" button while typing, allowing the system to generate refined suggestions (e.g., "happy birthday" → "Wishing you a very joyous birthday filled with laughter and cheer").
 
 ## ✅ Best Practices
 

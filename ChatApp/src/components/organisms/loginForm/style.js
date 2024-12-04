@@ -51,5 +51,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textDecorationLine: "underline",
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  },
 });
 export default styles;

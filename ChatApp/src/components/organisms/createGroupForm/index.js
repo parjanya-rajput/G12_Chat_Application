@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, ActivityIndicator, StatusBar, FlatList, Alert, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  StatusBar,
+  FlatList,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { Text, CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -39,16 +47,19 @@ const CreateGroupForm = () => {
   }, []);
 
   const toggleMemberSelection = (member) => {
-
     if (member.id === auth.currentUser.uid) {
       Alert.alert("You cannot remove yourself from the group.");
       return;
     }
 
-    const isSelected = selectedMembers.some((selected) => selected.id === member.id);
+    const isSelected = selectedMembers.some(
+      (selected) => selected.id === member.id
+    );
 
     if (isSelected) {
-      setSelectedMembers(selectedMembers.filter((selected) => selected.id !== member.id));
+      setSelectedMembers(
+        selectedMembers.filter((selected) => selected.id !== member.id)
+      );
     } else {
       Alert.alert(
         "Make Admin?",
@@ -83,7 +94,7 @@ const CreateGroupForm = () => {
       .then(() => {
         alert(`Group "${groupName}" created successfully!`);
         setIsLoading(false);
-        navigation.navigate("GroupList");
+        navigation.goBack();
       })
       .catch((error) => {
         alert(error.message);
@@ -106,22 +117,30 @@ const CreateGroupForm = () => {
   }
 
   // Filtered users based on search query
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
 
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Create a New Group</Text>
-        <Text style={styles.subtitle}>Set up a group for your friends, family, or team!</Text>
+        <Text style={styles.subtitle}>
+          Set up a group for your friends, family, or team!
+        </Text>
 
         <CustomInput
           placeholder="Enter group name"
@@ -155,7 +174,9 @@ const CreateGroupForm = () => {
           renderItem={({ item }) => (
             <CheckBox
               title={item.name}
-              checked={selectedMembers.some((selected) => selected.id === item.id)}
+              checked={selectedMembers.some(
+                (selected) => selected.id === item.id
+              )}
               onPress={() => toggleMemberSelection(item)}
             />
           )}

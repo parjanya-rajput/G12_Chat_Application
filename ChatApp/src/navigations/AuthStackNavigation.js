@@ -4,7 +4,7 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import OnBoardingScreen from "../screens/OnBoardingScreen";
 // import HomeDrawerNavigation from './HomeDrawerNavigation';
-import HomeStackNavigation from './HomeStackNavigation';
+import HomeStackNavigation from "./HomeStackNavigation";
 import ForgetPassword from "../screens/ForgotPasswordScreen";
 // import ChatListScreen from "../screens/ChatListScreen";
 // // import ProfilePicViewScreen from '../screens/ProfilePicViewScreen';
@@ -28,41 +28,41 @@ import CreateProfileScreen from "../screens/CreateProfileScreen";
 const Stack = createStackNavigator();
 
 const AuthStackNavigation = () => {
-    return (
-        <Stack.Navigator initialRouteName="OnBoardingScreen">
-            <Stack.Screen
-                name="OnBoardingScreen"
-                component={OnBoardingScreen}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="Login"
-                component={LoginScreen}
-                options={{ headerShown: true }}
-            />
-            <Stack.Screen
-                name="Signup"
-                component={SignupScreen}
-                options={{ headerShown: true }}
-            />
-            <Stack.Screen
-                name="ForgetPassword"
-                component={ForgetPassword}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="CreateProfileScreen"
-                component={CreateProfileScreen}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="Home"
-                component={HomeStackNavigation}
-                options={{ headerShown: false }}
-            />
-            {/* <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true }} /> */}
-            {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
-            {/* <Stack.Screen
+  return (
+    <Stack.Navigator initialRouteName="OnBoardingScreen">
+      <Stack.Screen
+        name="OnBoardingScreen"
+        component={OnBoardingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Signup"
+        component={SignupScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ForgetPassword"
+        component={ForgetPassword}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateProfileScreen"
+        component={CreateProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeStackNavigation}
+        options={{ headerShown: false }}
+      />
+      {/* <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true }} /> */}
+      {/* <Stack.Screen name="ProfilePicView" component={ProfilePicViewScreen} options={{ headerShown: false }}/> */}
+      {/* <Stack.Screen
                 name="Chat"
                 component={ChatScreen}
                 options={{ headerShown: false }}
@@ -122,10 +122,8 @@ const AuthStackNavigation = () => {
                 component={GroupChatScreen}
                 options={{ headerShown: true }}
             /> */}
-
-        </Stack.Navigator>
-
-    );
+    </Stack.Navigator>
+  );
 };
 
 export default AuthStackNavigation;

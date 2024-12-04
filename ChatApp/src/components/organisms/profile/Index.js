@@ -8,9 +8,7 @@ import {
   ActivityIndicator,
   StatusBar,
 } from "react-native";
-import {
-  SafeAreaView
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,7 +32,8 @@ const ProfileView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(initialData);
   const [refreshing, setRefreshing] = useState(false);
-  const defaultProfilePic = "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
+  const defaultProfilePic =
+    "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg";
   const defaultUserName = "Unknown User";
   const scrollY = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -98,14 +97,19 @@ const ProfileView = () => {
         // <NavigationContainer>
         //     <AuthStackNavigation />
         // </NavigationContainer>
-        <AuthStackNavigation />
+        // <AuthStackNavigation />
+        navigation.navigate("OnBoardingScreen");
       })
       .catch((error) => alert(error.message.toString()));
-  }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
 
       <View style={styles.header}>
         <TouchableOpacity
@@ -132,22 +136,28 @@ const ProfileView = () => {
             height: scrollY.interpolate({
               inputRange: [0, 200],
               outputRange: [250, 100],
-              extrapolate: 'clamp',
+              extrapolate: "clamp",
             }),
             opacity: scrollY.interpolate({
               inputRange: [0, 200],
               outputRange: [1, 0],
-              extrapolate: 'clamp',
+              extrapolate: "clamp",
             }),
           },
         ]}>
         <View style={styles.profile}>
           <Image
-            source={{ uri: profile != null ? profile.profile_pic : defaultProfilePic }}
+            source={{
+              uri: profile != null ? profile.profile_pic : defaultProfilePic,
+            }}
             style={styles.profileImage}
           />
-          <Text style={styles.username}>{profile != null ? profile.name : defaultUserName}</Text>
-          <Text style={styles.userHandle}>{profile != null ? profile.user_name : defaultUserName}</Text>
+          <Text style={styles.username}>
+            {profile != null ? profile.name : defaultUserName}
+          </Text>
+          <Text style={styles.userHandle}>
+            {profile != null ? profile.user_name : defaultUserName}
+          </Text>
 
           <View style={styles.statusContainer}>
             <Text style={styles.activityText}>Activity Status</Text>
@@ -157,9 +167,7 @@ const ProfileView = () => {
                   ? styles.onlineStatusText
                   : styles.offlineStatusText
               }>
-              {profile != null && profile.is_online
-                ? "Online"
-                : "Offline"}
+              {profile != null && profile.is_online ? "Online" : "Offline"}
             </Text>
           </View>
         </View>

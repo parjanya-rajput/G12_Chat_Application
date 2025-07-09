@@ -1,6 +1,7 @@
 # G12 Chat Application Architecture 🚀
 
 A project for the Software Engineering (IT-314) course, guided by Prof. Saurabh Tiwari
+<br>
 Team Leader - Parjanya Rajput (202201115)
 
 ## 📖 Table of Contents

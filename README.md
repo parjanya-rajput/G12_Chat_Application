@@ -15,7 +15,7 @@ A project for the Software Engineering (IT-314) course, guided by Prof. Saurabh 
 
 The G12 SpringTalk - A Chat Application is designed to provide a seamless and responsive chatting experience. It leverages a modular and scalable architecture combining the _Atomic Design Pattern_ and _MVC principles_.
 
-Watch the demo video here: [G12 SprintTalk - A Chat Application | Demo Video](https://youtu.be/amOgt-EhnI4)
+Watch the demo video here: [G12 SprintTalk - A Chat Application | Demo Video]([https://youtu.be/amOgt-EhnI4](https://youtu.be/UtoEn-mm9b0?si=xAwq_QiH-3QVPLcq))
 <br>
 Download the app here: [G12 SprintTalk - A Chat Application | Download](https://drive.google.com/file/d/1iMVfAD9C3DObcRSB124j0gFhpYVWClNJ/view?usp=sharing)
 
